@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$result = file_get_contents('C:/xampp1/htdocs/PROJECTGAZETTEER/php/countryBorders.geo.json');
+$result = file_get_contents('countryBorders.geo.json');
 
 $decode = json_decode($result, true);
 // print_r($decode);

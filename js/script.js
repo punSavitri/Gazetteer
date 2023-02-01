@@ -1,18 +1,19 @@
 $(document).ready(function () {
-  
-  $(".btn").click(function (){
-    
-    $.ajax({
-      type:'POST',
-      url:'C:/xampp1/htdocs/PROJECTGAZETTEER/php/getCountryBorders.php',
-      dataType:'json',
-      success:function(data){
-        $('#select_country').append(`<option value=${data.features.properties.iso_a3}>${data.features.properties.name}</option>`);
-      },
-      error:function(jqXHR, textStatus, errorThrown) {
-        alert(errorThrown+ ' ' + jqXHR + ' ' + textStatus);
-      }
-      })      
-  });  
-});
+  $.ajax({
+    type: "GET",
+    url: "php/getCountryBorders.php",
+    dataType: "json",
+    success: function (result) {
+      console.log(result);
 
+      for (var i = 0; i < result.data.features.length; i++) {
+        $("#select_country").append(
+          `<option value="${result.data.features[i].properties.iso_a3}">${result.data.features[i].properties.name}</option>`
+        );
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR);
+    },
+  });
+});
