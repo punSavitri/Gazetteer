@@ -5,21 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gazetteer</title>
-
+    <!-- fontawesome -->    
+    <script src="https://kit.fontawesome.com/062aaa8831.js" crossorigin="anonymous"></script>
     <!-- bootstrap css file -->
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
     <!-- Leaflet css file -->
     <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
-    <!-- plugins -->
+    <!-- Leaflet plugins -->
     <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
     <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="libs/plugins/easy-button.css" />
+    <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
+    <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css"/>
     <!-- custom css file -->
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <nav class="navbar bg-info">
-      <div class="container">
+      <div class="container-fluid">
         <form class="d-flex" role="search">
           <select name="select_country" id="select_country">
             <option>Please select country..</option>
@@ -27,7 +30,8 @@
         </form>
       </div>
     </nav>
-    <div id="map" class="col-md-9"></div>
+    <div id="map_div" class="col-md-9"></div>
+
 
     <!-- bootstrap js -->
     <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -36,7 +40,6 @@
       integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
       crossorigin="anonymous"
     ></script>
-
     <!-- Leaflet js file -->
     <script src="libs/Leaflet 1.9.3/leaflet.js
   "></script>
@@ -47,11 +50,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <!-- plugins js -->
+    <!-- Leaflet plugins js -->
     <script src="libs/plugins/leaflet.markercluster.js"></script>
     <script src="libs/plugins/easy-button.js"></script>
     <script src="libs/plugins/leaflet-providers.js"></script>
-
+    <script src="libs/plugins/L.Control.Pan.js"></script>
+    <script src="libs/plugins/L.Control.Sidebar.js"></script>
     <!-- jquery js -->
     <script src="libs/jquery/jquery-3.6.3.min.js"></script>
     <!-- script js file-->
