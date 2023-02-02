@@ -1,8 +1,8 @@
 //global variables
 var myMap;
 var lyrOSM;
-var lyrOpenTopo;
-var lyrEsriWorldImagery;
+var lyrCountry;
+var marker;
 var baseLayers;
 var overlays;
 var ctrlPan;
@@ -11,65 +11,62 @@ var ctrlSidebar;
 
 $(document).ready(function () {
   //create leaflet map object
-  myMap = L.map("map_div", {
-    center: [51.2625, -1.0871],
-    zoom: 13,
-    zoomControl: false,
-  });
+  myMap = L.map("map_div").setView([0, 0], 13);
 
   //adding marker to map
-  L.marker([51.2625, -1.0871])
-    .addTo(myMap)
-    .bindPopup("Basingstoke")
-    .openPopup();
+  marker = L.marker([0, 0]).addTo(myMap);
 
   //adding  raster layers as base map
   lyrOSM = L.tileLayer.provider("OpenStreetMap.Mapnik");
 
-  lyrOpenTopo = L.tileLayer.provider("OpenTopoMap");
-
-  lyrEsriWorldImagery = L.tileLayer
-    .provider("Esri.WorldImagery")
-    .myMap.addLayer(lyrOSM);
+  myMap.addLayer(lyrOSM);
+  //add panControl() method in myMap
+  ctrlPan = L.control.pan().addTo(myMap);
 
   baseLayers = {
-    "OpenStreetMap" : lyrOSM,
-    "OpenTopoMap" : lyrOpenTopo,
-    "Esri.WorldImagery" : lyrEsriWorldImagery,
+    OpenStreetMap: lyrOSM,
   };
+
   overlays = {
-    "OpenStreetMap": lyrOSM,
-    "OpenTopoMap": lyrOpenTopo,
-    "Esri.WorldImagery": lyrEsriWorldImagery,
+    OpenStreetMap: lyrOSM,
+    countryBorder: countryBorderJson,
   };
 
   L.control.layers(baseLayers, overlays).addTo(myMap);
 
-  //add panControl() method in myMap
-  ctrlPan = L.control.pan();
-  ctrlPan.addTo(myMap);
+  //dropdown country list
+  $("#select_country").click(function () {
+    $.ajax({
+      type: "GET",
+      url: "php/getCountryBorders.php",
+      dataType: "json",
+      success: function (result) {
+        console.log(result);
 
-  //adding easybutton and sidebar toggle()
-  ctrlEasyButton = L.easyButton("fas fa-exchange", function () {
-    ctrlSidebar.toggle();
-  }).addTo(myMap);
+        for (var i = 0; i < result.data.length; i++) {
+          $("#select_country").append(
+            `<option value="${result.data[i].properties.iso_a3}">${result.data[i].properties.name}</option>`
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+      },
+    });
 
-  //country list
-  $.ajax({
-    type: "GET",
-    url: "php/getCountryBorders.php",
-    dataType: "json",
-    success: function (result) {
-      console.log(result);
-
-      for (var i = 0; i < result.data.length; i++) {
-        $("#select_country").append(
-          `<option value="${result.data[i].properties.iso_a3}">${result.data[i].properties.name}</option>`
-        );
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR);
-    },
+    //adding geojson data in the map
+    var countryBorderJson = L.geoJSON
+      .ajax("php/countryBorders.geo.json", {
+        pointToLayer: returnCountryBorder,
+      })
+      .addTo(myMap);
+    countryBorderJson.on("data:loaded", function () {
+      myMap.fitBounds(countryBorderJson.getBounds());
+    });
   });
 });
+
+//function
+function returnCountryBorder(geoJsonPoint, latlng) {
+  return L.circleMarker(latlng, { radius: 10, color: "green" });
+}
