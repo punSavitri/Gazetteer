@@ -5,22 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gazetteer</title>
-    <!-- fontawesome -->
-    <script
-      src="https://kit.fontawesome.com/062aaa8831.js"
-      crossorigin="anonymous"
-    ></script>
+
     <!-- bootstrap css file -->
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
     <!-- Leaflet css file -->
     <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
-    <!-- ajax plugin -->
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"
-      integrity="sha512-Abr21JO2YqcJ03XGZRPuZSWKBhJpUAR6+2wH5zBeO4wAw4oksr8PRdF+BKIRsxvCdq+Mv4670rZ+dLnIyabbGw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
+
     <!-- Leaflet plugins -->
     <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
     <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
@@ -32,10 +22,12 @@
   </head>
   <body>
     <nav class="navbar bg-info">
-      <div class="container-fluid d-flex justify-content-center align-items-center col-md-4 ">        
-          <select name="select_country" id="select_country" class="p-2">
-            <option>Please select country..</option>
-          </select>
+      <div
+        class="container-fluid d-flex justify-content-center align-items-center col-md-4"
+      >
+        <select name="select_country" id="select_country" class="p-2">
+          <option>Please select country..</option>
+        </select>
       </div>
     </nav>
     <div id="map_div"></div>
@@ -50,7 +42,7 @@
     <!-- Leaflet js file -->
     <script src="libs/Leaflet 1.9.3/leaflet.js
   "></script>
-        <!-- Leaflet plugins js -->
+    <!-- Leaflet plugins js -->
     <script src="libs/plugins/leaflet.markercluster.js"></script>
     <script src="libs/plugins/easy-button.js"></script>
     <script src="libs/plugins/leaflet-providers.js"></script>

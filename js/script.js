@@ -1,41 +1,7 @@
-//global variables
 var myMap;
-var lyrOSM;
-var lyrCountry;
-var marker;
-var baseLayers;
-var overlays;
-var ctrlPan;
-var ctrlEasyButton;
-var ctrlSidebar;
-
-$(document).ready(function () {
-  //create leaflet map object
-  myMap = L.map("map_div").setView([0, 0], 13);
-
-  //adding marker to map
-  marker = L.marker([0, 0]).addTo(myMap);
-
-  //adding  raster layers as base map
-  lyrOSM = L.tileLayer.provider("OpenStreetMap.Mapnik");
-
-  myMap.addLayer(lyrOSM);
-  //add panControl() method in myMap
-  ctrlPan = L.control.pan().addTo(myMap);
-
-  baseLayers = {
-    OpenStreetMap: lyrOSM,
-  };
-
-  overlays = {
-    OpenStreetMap: lyrOSM,
-    countryBorder: countryBorderJson,
-  };
-
-  L.control.layers(baseLayers, overlays).addTo(myMap);
-
-  //dropdown country list
-  $("#select_country").click(function () {
+$(document)
+  .ready(function () {
+    //dropdown list of countries
     $.ajax({
       type: "GET",
       url: "php/getCountryBorders.php",
@@ -54,19 +20,68 @@ $(document).ready(function () {
       },
     });
 
-    //adding geojson data in the map
-    var countryBorderJson = L.geoJSON
-      .ajax("php/countryBorders.geo.json", {
-        pointToLayer: returnCountryBorder,
-      })
-      .addTo(myMap);
-    countryBorderJson.on("data:loaded", function () {
-      myMap.fitBounds(countryBorderJson.getBounds());
-    });
-  });
-});
+    // //create leaflet map object
+    var myMap = L.map("map_div").setView([0, 0], 13);
 
-//function
-function returnCountryBorder(geoJsonPoint, latlng) {
-  return L.circleMarker(latlng, { radius: 10, color: "green" });
+    // //adding marker to map
+
+    // //adding  raster layers as base map
+    var lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 13,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    });
+    myMap.addLayer(lyrOsm);
+
+    // //add panControl() method in myMap
+    var ctrlPan = L.control.pan().addTo(myMap);
+
+    var objBaseLayers = {
+      OpenStreetMap: lyrOsm,
+    };
+
+    var objOverlays = {
+      OpenStreetMap: lyrOsm,
+    };
+
+    L.control.layers(objBaseLayers, objOverlays).addTo(myMap);
+
+    //ploting border to selected country
+    $("#select_country").change(function () {
+      $.ajax({
+        url: "php/getCountryBorders.php",
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+          console.log(response);
+          L.geoJson(
+            response,
+            { onEachFeature: forEachFeature },
+            { style: myStyle }
+          ).addTo(myMap);
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+      myMap.fitBounds(response.getBounds());
+    });
+
+    function forEachFeature(feature, layer) {
+      if (feature.geometry.type === "MultiPolygon") {
+        layer.bindPopup(feature.geometry.coordinates.join(""));
+      }
+    }
+  })
+  .addTo(myMap);
+
+//set style for layer
+function myStyle(feature) {
+  return {
+    fillColor: "yello",
+    color: "green",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.7,
+  };
 }
