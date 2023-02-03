@@ -49,7 +49,7 @@ $(document)
     //ploting border to selected country
     $("#select_country").change(function () {
       $.ajax({
-        url: "php/getCountryBorders.php",
+        url: "php/highlightCountryBorder.php",
         type: "GET",
         dataType: "json",
         success: function (response) {
@@ -73,8 +73,7 @@ $(document)
       }
     }
   })
-  .addTo(myMap);
-
+  
 //set style for layer
 function myStyle(feature) {
   return {
