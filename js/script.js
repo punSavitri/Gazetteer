@@ -1,4 +1,5 @@
 var myMap;
+var marker;
 var border;
 
 $(document).ready(function () {
@@ -33,17 +34,18 @@ $(document).ready(function () {
   myMap.addLayer(lyrOsm);
 
   // // adding customize marker to map
-  // var orangeLeafMarker = L.icon({
-  //   iconUrl: "leaf-orange.png",
-  //   shadowUrl: "leaf-shadow.png",
-  //   iconSize: [38, 95],
-  //   shadowSize: [50, 64],
-  //   iconAnchor: [22, 94],
-  //   shadowAnchor: [4, 62],
-  //   popupAnchor: [-3, -76],
-  // });
-  // var marker = L.maker([51.2665, 1.0924], { icon: orangeLeafMarker });
-  // marker.addTo(myMap);
+  var orangeLeafMarker = L.icon({
+    iconUrl: "leaf-orange.png",
+    shadowUrl: "leaf-shadow.png",
+    iconSize: [38, 95],
+    shadowSize: [50, 64],
+    iconAnchor: [22, 94],
+    shadowAnchor: [4, 62],
+    popupAnchor: [-3, -76],
+  });
+
+  marker = L.maker([51.2665, 1.0924], { icon: orangeLeafMarker });
+  marker.addTo(myMap);
 
   // //add panControl() method in myMap
   var ctrlPan = L.control.pan().addTo(myMap);
@@ -77,7 +79,7 @@ $(document).ready(function () {
           }
         }
         //set style
-        var border = L.geoJSON(
+        border = L.geoJSON(
           data.data,
           {
             style: function (feature) {
