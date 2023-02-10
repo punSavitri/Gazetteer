@@ -25,12 +25,53 @@
       <div
         class="container-fluid d-flex justify-content-center align-items-center col-md-4"
       >
-        <select name="select_country" id="select_country" class="p-2">
+        <select
+          name="select_country"
+          class="select_country"
+          id="select_country"
+          class="p-2"
+        >
           <option>Please select country..</option>
         </select>
       </div>
     </nav>
     <div id="map_div"></div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModalLive"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="country_info"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- bootstrap js -->
     <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>

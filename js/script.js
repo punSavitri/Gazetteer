@@ -4,22 +4,28 @@ var border;
 
 $(document).ready(function () {
   //dropdown list of countries
-  $.ajax({
-    type: "GET",
-    url: "php/getCountryBorders.php",
-    dataType: "json",
-    success: function (result) {
-      console.log(result);
+  $(".select_country").change(function () {
+    $.ajax({
+      type: "GET",
+      url: "php/selectCountry.php",
+      dataType: "json",
+      data: {
+        iso: $(".select_country").val(),
+      },
 
-      for (var i = 0; i < result.data.length; i++) {
-        $("#select_country").append(
-          `<option value="${result.data[i].properties.iso_a2}">${result.data[i].properties.name}</option>`
-        );
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR);
-    },
+      success: function (result) {
+        console.log(result);
+
+        for (var i = 0; i < result.data.length; i++) {
+          $(".select_country").append(
+            `<option value="${result.data[i].properties.iso_a2}">${result.data[i].properties.name}</option>`
+          );
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+      },
+    });
   });
 
   // //create leaflet map object
@@ -47,19 +53,6 @@ $(document).ready(function () {
   marker = L.marker([51.2665, 1.0924], { icon: orangeLeafMarker });
   marker.addTo(myMap);
 
-  // //add panControl() method in myMap
-  var ctrlPan = L.control.pan().addTo(myMap);
-
-  var objBaseLayers = {
-    OpenStreetMap: lyrOsm,
-  };
-
-  var objOverlays = {
-    OpenStreetMap: lyrOsm,
-  };
-
-  L.control.layers(objBaseLayers, objOverlays).addTo(myMap);
-
   //ploting border to selected country
   $("#select_country").change(function () {
     $.ajax({
@@ -76,42 +69,11 @@ $(document).ready(function () {
         if (border) {
           border.clearLayers();
         }
-        //fetch weather api for country listed in geojson file for current weather
+        
         border = L.geoJSON(data.data, {
-          onEachFeature: funcForEachFeature,
           style: funcStyle,
         }).addTo(myMap);
 
-        function funcForEachFeature(feature, layer) {
-          layer.on("click", function (e) {
-            fetch(
-              "http://api.weatherapi.com/v1/current.json?key=39485f949c7847c58a2110603230902&q=" +
-                feature.properties.name +
-                "&aqi=no"
-            )
-              .then((response) => response.json())
-              .then((data) => {
-                var weather =
-                  "<div><p><b>Weather:</b>" +
-                  data.current.condition.text +
-                  data.current.condition.icon +
-                  "<br><b>Humidity:</b>" +
-                  data.current.humidity +
-                  "<br><b>Temperature in &deg;C:</b>" +
-                  data.current.temp_c +
-                  "<p></div>";
-                layer.bindPopup(
-                  '<img src="https://countryflagsapi.com/png/' +
-                    feature.properties.name +
-                    '"width="30px" height="20px"/><h2>' +
-                    feature.properties.name +
-                    "</h2>" +
-                    weather
-                );
-              })
-              .catch((error) => console.log(error));
-          });
-        }
         //set style for feature
         function funcStyle(feature) {
           return {
@@ -128,5 +90,18 @@ $(document).ready(function () {
         console.log(error);
       },
     });
+
+    // $.ajax({
+    //   url: "path/to/getCountryInfo.php",
+    //   data: { iso: $("#select_country").val() },
+    //   success: function (result) {
+    //     $("#country_info").html(result.data.info);
+    //     // etc
+    //   },
+    // });
   });
 });
+
+// L.easyButton('<img src="/path/to/img/of/penguin.png">', function (btn, map) {
+//   $("#exampleModalLive").modal("show");
+// }).addTo(myMap);
