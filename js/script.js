@@ -1,38 +1,36 @@
 var myMap;
+var lyrOsm;
 var marker;
 var border;
-
-$(document).ready(function () {
+var easyButton;
+$(document).ready(() => {
   //dropdown list of countries
-  $(".select_country").change(function () {
-    $.ajax({
-      type: "GET",
-      url: "php/selectCountry.php",
-      dataType: "json",
-      data: {
-        iso: $(".select_country").val(),
-      },
+  $.ajax({
+    type: "GET",
+    url: "php/selectCountry.php",
+    dataType: "json",
+    data: {
+      iso: $("#select_country").val(),
+    },
+    success: function (data) {
+      console.log(data);
 
-      success: function (result) {
-        console.log(result);
-
-        for (var i = 0; i < result.data.length; i++) {
-          $(".select_country").append(
-            `<option value="${result.data[i].properties.iso_a2}">${result.data[i].properties.name}</option>`
-          );
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-      },
-    });
+      for (var i = 0; i < data.data.length; i++) {
+        $("#select_country").append(
+          `<option value="${data.data[i].properties.iso_a2}">${data.data[i].properties.name}</option>`
+        );
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR);
+    },
   });
 
-  // //create leaflet map object
-  var myMap = L.map("map_div").setView([51.2665, 1.0924], 10);
+  // // //create leaflet map object
+  myMap = L.map("map_div").setView([51.2665, 1.0924], 10);
 
   // //Basemap
-  var lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 13,
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -53,7 +51,7 @@ $(document).ready(function () {
   marker = L.marker([51.2665, 1.0924], { icon: orangeLeafMarker });
   marker.addTo(myMap);
 
-  //ploting border to selected country
+  // //ploting border to selected country
   $("#select_country").change(function () {
     $.ajax({
       url: "php/highlightCountryBorder.php",
@@ -69,7 +67,7 @@ $(document).ready(function () {
         if (border) {
           border.clearLayers();
         }
-        
+
         border = L.geoJSON(data.data, {
           style: funcStyle,
         }).addTo(myMap);
@@ -90,18 +88,23 @@ $(document).ready(function () {
         console.log(error);
       },
     });
-
-    // $.ajax({
-    //   url: "path/to/getCountryInfo.php",
-    //   data: { iso: $("#select_country").val() },
-    //   success: function (result) {
-    //     $("#country_info").html(result.data.info);
-    //     // etc
-    //   },
-    // });
   });
-});
 
-// L.easyButton('<img src="/path/to/img/of/penguin.png">', function (btn, map) {
-//   $("#exampleModalLive").modal("show");
-// }).addTo(myMap);
+  //call ajax to get information abount country  
+  $.ajax({
+    url: "php/getCountryInfo.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      $("#country").html(result["data"][0]["countryName"]);
+      $("#capital").html(result["data"][0]["capital"]);
+      $("#population").html(result["data"][0]["population"]);
+      $("#languages").html(result["data"][0]["languages"]);
+    },
+  });
+
+  //easyButton global variable
+  easyButton = L.easyButton("fa-globe", function (btn, map) {
+    $("#myModal").modal("show");
+  }).addTo(myMap);
+});

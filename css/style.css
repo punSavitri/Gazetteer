@@ -11,4 +11,15 @@ html, body {
   margin: 0;
   padding: 0;
 }
+  .modal-header  {
+  background:#68a6b1;
+  padding: 15px 40px 15px 20px;
+  color:#fff;
+}
+.btn-close:hover {
+  color:white;
+  text-decoration:none;
+  cursor:pointer;
+  
 
+}

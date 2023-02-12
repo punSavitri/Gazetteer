@@ -1,88 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gazetteer</title>
 
-    <!-- bootstrap css file -->
-    <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
-    <!-- Leaflet css file -->
-    <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gazetteer</title>
+  <!-- bootstrap css file -->
+  <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
+  <!-- Leaflet css file -->
+  <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
+  <!-- fontawesome -->
+  <script src="https://kit.fontawesome.com/062aaa8831.js" crossorigin="anonymous"></script>
+  <!-- Leaflet plugins -->
+  <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
+  <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="libs/plugins/easy-button.css" />
+  <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
+  <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
+  <!-- custom css file -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
 
-    <!-- Leaflet plugins -->
-    <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
-    <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
-    <link rel="stylesheet" href="libs/plugins/easy-button.css" />
-    <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
-    <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
-    <!-- custom css file -->
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <nav class="navbar bg-info">
-      <div
-        class="container-fluid d-flex justify-content-center align-items-center col-md-4"
-      >
-        <select
-          name="select_country"
-          class="select_country"
-          id="select_country"
-          class="p-2"
-        >
-          <option>Please select country..</option>
-        </select>
-      </div>
-    </nav>
-    <div id="map_div"></div>
-
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="exampleModalLive"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div id="country_info"></div>
+<body>
+  <nav class="navbar bg-info">
+    <div class="container-fluid d-flex justify-content-center align-items-center col-md-4">
+      <select class="select_country" id="select_country" class="p-2">
+        <option>Please select country..</option>
+      </select>
+    </div>
+  </nav>
+  <div id="map_div"></div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Country Information</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="country_info">
+            <div id="country" class="">Country:</div>
+            <div id="capital">Capital:</div>
+            <div id="population">Population:</div>
+            <div id="languages">Languages:</div>
+            <div id="weather">Weather:</div>
+            <div id="currency">Currency:</div>
+            <div id="wikipediaLinks">Wikipedia Links:</div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
     </div>
-
     <!-- bootstrap js -->
     <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <!-- Leaflet js file -->
-    <script src="libs/Leaflet 1.9.3/leaflet.js
-  "></script>
+    <script src="libs/Leaflet 1.9.3/leaflet.js"></script>
     <!-- Leaflet plugins js -->
     <script src="libs/plugins/leaflet.markercluster.js"></script>
     <script src="libs/plugins/easy-button.js"></script>
@@ -93,5 +73,5 @@
     <script src="libs/jquery/jquery-3.6.3.min.js"></script>
     <!-- script js file-->
     <script src="js/script.js" type="application/javascript"></script>
-  </body>
+</body>
 </html>
