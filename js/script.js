@@ -88,23 +88,32 @@ $(document).ready(() => {
         console.log(error);
       },
     });
-  });
+    //call ajax to get information about country
 
-  //call ajax to get information abount country  
-  $.ajax({
-    url: "php/getCountryInfo.php",
-    type: "GET",
-    dataType: "json",
-    success: function (result) {
-      $("#country").html(result["data"][0]["countryName"]);
-      $("#capital").html(result["data"][0]["capital"]);
-      $("#population").html(result["data"][0]["population"]);
-      $("#languages").html(result["data"][0]["languages"]);
-    },
+    $.ajax({
+      url: "php/getCountryInfo.php",
+      type: "GET",
+      dataType: "json",
+      data: {
+        country: $("#select_country").val(),
+        lang: "en",
+      },
+      success: function (result) {
+        console.log(result);
+        $("#country").append(result["data"][0]["countryName"]);
+        $("#capital").append(result["data"][0]["capital"]);
+        $("#population").append(result["data"][0]["population"]);
+        $("#languages").append(result["data"][0]["languages"]);
+        $("#myModal").modal("show");
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+      },
+    });
   });
-
-  //easyButton global variable
   easyButton = L.easyButton("fa-globe", function (btn, map) {
     $("#myModal").modal("show");
   }).addTo(myMap);
 });
+
+//easyButton global variable
