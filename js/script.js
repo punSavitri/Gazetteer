@@ -1,6 +1,8 @@
 var myMap;
 var lyrOsm;
 var marker;
+var circle;
+var zoomed;
 var border;
 var easyButton;
 $(document).ready(() => {
@@ -36,20 +38,6 @@ $(document).ready(() => {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   });
   myMap.addLayer(lyrOsm);
-
-  // // adding customize marker to map
-  var orangeLeafMarker = L.icon({
-    iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-orange.png",
-    shadowUrl: "https://leafletjs.com/examples/custom-icons/leaf-shadow.png",
-    iconSize: [38, 95],
-    shadowSize: [50, 64],
-    iconAnchor: [22, 94],
-    shadowAnchor: [4, 62],
-    popupAnchor: [-3, -76],
-  });
-
-  marker = L.marker([51.2665, 1.0924], { icon: orangeLeafMarker });
-  marker.addTo(myMap);
 
   // //ploting border to selected country
   $("#select_country").change(function () {
@@ -88,6 +76,7 @@ $(document).ready(() => {
         console.log(error);
       },
     });
+
     //call ajax to get information about country
 
     $.ajax({
@@ -105,6 +94,60 @@ $(document).ready(() => {
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
         $("#myModal").modal("show");
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+      },
+    });
+
+    //selected country weather
+    $.ajax({
+      url: "php/countryWeatherInfo.php",
+      type: "GET",
+      dataType: "json",
+      data: {
+        country: $("#select_country").val(),
+        city: "city",
+      },
+      success: function (data) {
+        console.log(data);
+        $("#weather_info").append(
+          "<h3>Current Weather for" +
+            data.name +
+            "," +
+            data.sys.country +
+            "</h3>" +
+            "<h3><b>Weather</b>:" +
+            data.weather[0].main +
+            "</h3>" +
+            "<h3><b>Description</b>:<img src='http://openweathermap.org/img/w/" +
+            data.weather[0].icon +
+            ".png'>" +
+            data.weather[0].description +
+            "</h3>" +
+            "<h3><b>Temperature</b>:" +
+            data.main.temp +
+            "&deg;C</h3>" +
+            "<h3><b>Pressure</b>:" +
+            data.main.pressure +
+            "hPa</h3>" +
+            "<h3><b>Humidity</b>:" +
+            data.main.humidity +
+            "%</h3>" +
+            "<h3><b>Min.Temperature</b>:" +
+            data.main.temp_min +
+            " &deg;C</h3>" +
+            "<h3><b>Max.Temperature<b/>:" +
+            data.main.temp_max +
+            "&deg;C</h3>" +
+            "<h3><b>Wind Speed</b>:" +
+            data.wind.speed +
+            "m/s</h3>" +
+            "<h3><b>Wind Direction<b>:" +
+            data.wind.deg +
+            "&deg;</h3>"
+        );
+        $("#weatherModal").modal("show");
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
