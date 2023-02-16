@@ -18,23 +18,28 @@
   <link rel="stylesheet" href="libs/plugins/easy-button.css" />
   <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
   <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
+  <link rel="stylesheet" href="libs/plugins/L.Control.Locate.min.css">
+
+
+  <script src="Leaflet.Weather.js"></script>
   <!-- custom css file -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-  <nav class="navbar bg-info">
-    <div class="container-fluid d-flex justify-content-center align-items-center col-md-4">
-      <select class="select_country" id="select_country" class="p-2">
+  <nav class="navbar bg-dark">
+    <div class="container d-flex justify-content-center align-items-center col-md-4">
+
+      <select class="form-select form-select-sm fs-6" aria-label=".form-select-sm example" id="select_country">
         <option>Please select country..</option>
       </select>
-
     </div>
   </nav>
   <div id="map_div"></div>
-  <!-- Modal -->
+  
+  <!-- Modal 1 for countryInfo -->
   <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header bg-info">
           <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">Country Information</h1>
@@ -54,40 +59,50 @@
         </div>
       </div>
     </div>
-    <!-- weatherInfo Modal -->
-    <div class="modal fade" id="weatherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-info">
-            <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">Weather Information</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    <!-- Modal 2 for weatherInfo -->
+  <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">Current Weather Status</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="weather_info">
+            
           </div>
-          <div class="modal-body">
-            <div id="weather_info"></div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
-      <!-- bootstrap js -->
-      <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-        crossorigin="anonymous"></script>
-      <!-- Leaflet js file -->
-      <script src="libs/Leaflet 1.9.3/leaflet.js"></script>
-      <!-- Leaflet plugins js -->
-      <script src="libs/plugins/leaflet.markercluster.js"></script>
-      <script src="libs/plugins/easy-button.js"></script>
-      <script src="libs/plugins/leaflet-providers.js"></script>
-      <script src="libs/plugins/L.Control.Pan.js"></script>
-      <script src="libs/plugins/L.Control.Sidebar.js"></script>
-      <!-- jquery js -->
-      <script src="libs/jquery/jquery-3.6.3.min.js"></script>
-      <!-- script js file-->
-      <script src="js/script.js" type="application/javascript"></script>
+    </div>
+
+
+
+    <!-- bootstrap js -->
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+      crossorigin="anonymous"></script>
+    <!-- Leaflet js file -->
+    <script src="libs/Leaflet 1.9.3/leaflet.js"></script>
+    <!-- Leaflet plugins js -->
+    <script src="libs/plugins/leaflet.markercluster.js"></script>
+    <script src="libs/plugins/easy-button.js"></script>
+    <script src="libs/plugins/leaflet-providers.js"></script>
+    <script src="libs/plugins/L.Control.Pan.js"></script>
+    <script src="libs/plugins/L.Control.Sidebar.js"></script>
+    <script src="libs/plugins/L.Control.Locate.min.js"></script>
+
+    <!-- jquery js -->
+    <script src="libs/jquery/jquery-3.6.3.min.js"></script>
+    <!-- countryBordersgeojsonData -->
+    <script src="./php/countryBordersgeojson.js"></script>
+    <!-- script js file-->
+    <script src="js/script.js" type="application/javascript"></script>
 </body>
 
 </html>

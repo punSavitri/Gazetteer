@@ -14,7 +14,7 @@ $countryBorder;
 
 
 for ($i = 0; $i < count($decode['features']); $i++) {
-  
+
   if ($decode['features'][$i]['properties']['iso_a2'] == $_REQUEST['iso']) {
     $countryBorder = $decode['features'][$i]['geometry'];
   }
