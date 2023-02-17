@@ -1,92 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gazetteer</title>
+    <!-- bootstrap css file -->
+    <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
+    <!-- Leaflet css file -->
+    <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
+    <!-- fontawesome -->
+    <script
+      src="https://kit.fontawesome.com/062aaa8831.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Leaflet plugins -->
+    <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
+    <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="libs/plugins/easy-button.css" />
+    <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
+    <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
+    <link rel="stylesheet" href="libs/plugins/L.Control.Locate.min.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gazetteer</title>
-  <!-- bootstrap css file -->
-  <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" />
-  <!-- Leaflet css file -->
-  <link rel="stylesheet" href="libs/Leaflet 1.9.3/leaflet.css" />
-  <!-- fontawesome -->
-  <script src="https://kit.fontawesome.com/062aaa8831.js" crossorigin="anonymous"></script>
-  <!-- Leaflet plugins -->
-  <link rel="stylesheet" href="libs/plugins/MarkerCluster.css" />
-  <link rel="stylesheet" href="libs/plugins/MarkerCluster.Default.css" />
-  <link rel="stylesheet" href="libs/plugins/easy-button.css" />
-  <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
-  <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
-  <link rel="stylesheet" href="libs/plugins/L.Control.Locate.min.css">
+    <!-- <script src="Leaflet.Weather.js"></script> -->
+    <!-- custom css file -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
+  <body>
+    <nav class="navbar bg-dark">
+      <div
+        class="container d-flex justify-content-center align-items-center col-md-4"
+      >
+        <select
+          class="form-select form-select-sm fs-6"
+          aria-label=".form-select-sm example"
+          id="select_country"
+        >
+          <option>Please select country..</option>
+        </select>
+      </div>
+    </nav>
+    <div id="map_div"></div>
 
-  <script src="Leaflet.Weather.js"></script>
-  <!-- custom css file -->
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-
-<body>
-  <nav class="navbar bg-dark">
-    <div class="container d-flex justify-content-center align-items-center col-md-4">
-
-      <select class="form-select form-select-sm fs-6" aria-label=".form-select-sm example" id="select_country">
-        <option>Please select country..</option>
-      </select>
-    </div>
-  </nav>
-  <div id="map_div"></div>
-  
-  <!-- Modal 1 for countryInfo -->
-  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-info">
-          <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">Country Information</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div id="country_info">
-            <div id="country" class="text-success">Country:</div>
-            <div id="capital" class="text-success">Capital:</div>
-            <div id="population" class="text-success">Population:</div>
-            <div id="languages" class="text-success">Languages:</div>
+    <!-- Modal 1 for countryInfo -->
+    <div
+      class="modal fade"
+      id="myModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title text-light align-items-center fs-2"
+              id="modalLabel"
+            >
+              Country Information
+            </h1>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="modal-body">
+            <div id="country_info">
+              <div id="country" class="text-dark fs-5 align-items-center">
+                <b>Country:</b>
+              </div>
+              <div id="capital" class="text-dark fs-5 align-items-center">
+                <b>Capital City:</b>
+              </div>
+              <div id="population" class="text-dark fs-5 align-items-center">
+                <b>Population:</b>
+              </div>
+              <div id="languages" class="text-dark fs-5 align-items-center">
+                <b>Languages:</b>
+              </div>
+              <div id="wikipediaLink" class="text-dark fs-5 align-items-center">
+                <b>Wikipedia Link:</b>
+                <p>
+                  <a href="#" class="wikiLink" title="Wikipedia Search"
+                    >For More Information Click here..</a
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modal 2 for weatherInfo -->
-  <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header bg-primary">
-          <h1 class="modal-title fs-5 text-dark" id="exampleModalLabel">Current Weather Status</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div id="weather_info">
-            
+    <div
+      class="modal fade"
+      id="myModal2"
+      tabindex="-1"
+      aria-labelledby="modalLabel2"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary">
+            <h1
+              class="modal-title text-light align-items-center fs-2"
+              id="modalLabel"
+            >
+              Weather Status
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+          <div class="modal-body">
+            <div id="weather_info"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-
-
     <!-- bootstrap js -->
     <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
       integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
     <!-- Leaflet js file -->
     <script src="libs/Leaflet 1.9.3/leaflet.js"></script>
     <!-- Leaflet plugins js -->
@@ -103,6 +173,5 @@
     <script src="./php/countryBordersgeojson.js"></script>
     <!-- script js file-->
     <script src="js/script.js" type="application/javascript"></script>
-</body>
-
+  </body>
 </html>

@@ -6,6 +6,7 @@ var circle;
 var zoomed;
 var border;
 var easyButton;
+var easyButtonWeather;
 var markerCluster;
 $(document).ready(() => {
   //dropdown list of countries
@@ -25,6 +26,7 @@ $(document).ready(() => {
         );
       }
     },
+
     error: function (jqXHR, textStatus, errorThrown) {
       console.log(jqXHR);
     },
@@ -43,7 +45,7 @@ $(document).ready(() => {
 
   L.control.locate().addTo(myMap);
 
-  // //ploting border to selected country
+  // ploting border to selected country
   $("#select_country").change(function () {
     $.ajax({
       url: "php/highlightCountryBorder.php",
@@ -100,68 +102,57 @@ $(document).ready(() => {
         $("#languages").append(result["data"][0]["languages"]);
 
         $("#myModal").modal("show");
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-      },
-    });
 
-    //selected country weather
-
-    $.ajax({
-      url: "php/countryWeatherInfo.php",
-      type: "GET",
-      dataType: "json",
-      data: {
-        city: "city",
-      },
-      success: function (data) {
-        console.log(data);
         $.ajax({
-          url: "php/getCountryInfo.php",
+          url: "php/countryWeatherInfo.php",
           type: "GET",
           dataType: "json",
           data: {
-            country: $("#select_country").val(),
-            lang: "en",
+            city: result["data"][0]["capital"],
           },
           success: function (data) {
             console.log(data);
-            $("#weather_info").html(
-              "<div><h3>Current Weather for" +
-                data.name +
+            let temp = data.data.main.temp;
+            temp = Math.floor(temp);
+
+            let min_temp = data.data.main.temp_min;
+            min_temp = Math.floor(min_temp);
+
+            let max_temp = data.data.main.temp_max;
+            max_temp = Math.floor(max_temp);
+
+            $("#weather_info").append(
+              "<div><p><b>City</b>:" +
+                data.data.name +
                 "," +
-                data.sys.country +
-                "</h3></div>" +
-                "<div><h3><b>Weather</b>:" +
-                data.weather[0].main +
-                "</h3></div>" +
-                "<h3><b>Description</b>:<img src='http://openweathermap.org/img/w/" +
-                data.weather[0].icon +
+                data.data.sys.country +
+                "<br><b>Weather</b>:" +
+                data.data.weather[0].main +
+                "<br><b>Weather Description</b>:<img src='http://openweathermap.org/img/w/" +
+                data.data.weather[0].icon +
                 ".png'>" +
-                data.weather[0].description +
-                "</h3></div>" +
-                "<div><h3><b>Temperature</b>:" +
-                data.main.temp +
-                "&deg;C</h3></div>" +
-                "<div><h3><b>Pressure</b>:" +
-                data.main.pressure +
-                "hPa</h3></div>" +
-                "<div><h3><b>Humidity</b>:" +
-                data.main.humidity +
-                "%</h3></div>" +
-                "<div><h3><b>Min.Temperature</b>:" +
-                data.main.temp_min +
-                " &deg;C</h3></div>" +
-                "<div><h3><b>Max.Temperature<b/>:" +
-                data.main.temp_max +
-                "&deg;C</h3></div>" +
-                "<div><h3><b>Wind Speed</b>:" +
-                data.wind.speed +
-                "m/s</h3></div>" +
-                "<div><h3><b>Wind Direction<b>:" +
-                data.wind.deg +
-                "&deg;</h3></div>"
+                data.data.weather[0].description +
+                "<br><b>Temperature</b>:" +
+                +temp +
+                "&deg;C" +
+                "<br><b>Pressure</b>:" +
+                data.data.main.pressure +
+                "hPa" +
+                "<br><b>Humidity</b>:" +
+                data.data.main.humidity +
+                "&#37;" +
+                "<br><b>Min.Temperature</b>:" +
+                min_temp +
+                " &deg;C" +
+                "<br><b>Max.Temperature<b/>:" +
+                max_temp +
+                "&deg;C" +
+                "<br><b>Wind Speed</b>:" +
+                data.data.wind.speed +
+                "m/s" +
+                "<br><b>Wind Direction<b>:" +
+                data.data.wind.deg +
+                "&deg;</p></div>"
             );
 
             $("#myModal2").modal("show");
@@ -169,17 +160,35 @@ $(document).ready(() => {
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR);
           },
+
+          //
         });
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
       },
-
-      //
+    });
+    $.ajax({
+      url: "php/wikipediaSearch.php",
+      type: "GET",
+      dataType: "json",
+      data: {
+        placename: $("#select_country option:selected").text(),
+      },
+      success: function (data) {
+        console.log(data);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+      },
     });
   });
-  easyButton = L.easyButton("fa-globe", function (btn, map) {
+  easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
     $("#myModal").modal("show");
+  }).addTo(myMap);
+
+  easyButtonWeather = L.easyButton("fa-cloud fa-1.99x", function (btn, map) {
+    $("#myModal2").modal("show");
   }).addTo(myMap);
 });
 
