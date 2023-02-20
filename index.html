@@ -29,18 +29,62 @@
 
   <body>
     <nav class="navbar bg-dark">
+      <div class="d-flex justify-content-left align-items-center text-light">
+        <a
+          href="#sidebar"
+          class="d-block mt-4 text-light"
+          data-bs-toggle="offcanvas"
+          role="button"
+          aria-controls="sidebar"
+        >
+          Click to Wikipedia Search</a
+        >
+      </div>
+
       <div
-        class="container d-flex justify-content-center align-items-center col-md-4"
+        class="container d-flex justify-content-left align-items-center col-md-3"
       >
         <select
-          class="form-select form-select-sm fs-6"
-          aria-label=".form-select-sm example"
+          class="form-select form-select-md fs-6"
+          aria-label=".form-select-md example"
           id="select_country"
         >
           <option>Please select country..</option>
         </select>
+
+        <!--offcanvas  -->
+        <div
+          class="offcanvas offcanvas-start"
+          tabindex="-1"
+          id="sidebar"
+          aria-labelledby="sidebar-label"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebar-label">
+              <b>Useful Information</b>
+            </h5>
+            <button
+              type="button
+        "
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <div id="output">
+              <p id="title"><b>Title:</b></p>
+              <p id="summary"><b>Summary:</b></p>
+              <p id="thumbnailImg">
+                <img src="" width="100" height="100" alt="Thumbnail Image" />
+              </p>
+              <p id="wikiLink"><b>WikipediaUrL:</b></p>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
+
     <div id="map_div"></div>
 
     <!-- Modal 1 for countryInfo -->
@@ -72,6 +116,9 @@
               <div id="country" class="text-dark fs-5 align-items-center">
                 <b>Country:</b>
               </div>
+              <div id="continent" class="text-dark fs-5 align-items-center">
+                <b>Continent:</b>
+              </div>
               <div id="capital" class="text-dark fs-5 align-items-center">
                 <b>Capital City:</b>
               </div>
@@ -81,13 +128,8 @@
               <div id="languages" class="text-dark fs-5 align-items-center">
                 <b>Languages:</b>
               </div>
-              <div id="wikipediaLink" class="text-dark fs-5 align-items-center">
-                <b>Wikipedia Link:</b>
-                <p>
-                  <a href="#" class="wikiLink" title="Wikipedia Search"
-                    >For More Information Click here..</a
-                  >
-                </p>
+              <div id="currencyCode" class="text-dark fs-5 align-items-center">
+                <b>Currency Code:</b>
               </div>
             </div>
             <div class="modal-footer">

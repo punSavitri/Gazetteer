@@ -43,8 +43,6 @@ $(document).ready(() => {
   });
   myMap.addLayer(lyrOsm);
 
-  L.control.locate().addTo(myMap);
-
   // ploting border to selected country
   $("#select_country").change(function () {
     $.ajax({
@@ -97,9 +95,11 @@ $(document).ready(() => {
         console.log(result);
 
         $("#country").append(result["data"][0]["countryName"]);
+        $("#continent").append(result["data"][0]["continent"]);
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
+        $("#currencyCode").append(result["data"][0]["currencyCode"]);
 
         $("#myModal").modal("show");
 
@@ -175,15 +175,55 @@ $(document).ready(() => {
       data: {
         placename: $("#select_country option:selected").text(),
       },
-      success: function (data) {
-        console.log(data);
+      success: function (response) {
+        console.log(response);
+        $("#title").append(response["data"][0]["title"]);
+        $("#summary").append(response["data"][0]["summary"]);
+        $("#thumbnailImg").append(response["data"][0]["thumbnailImg"]);
+        $("#wikiLink").attr(
+          "href",
+          "https://" + response.data.geonames[0].wikipediaUrl
+        );
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
       },
     });
   });
-  easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
+  //
+  //Getting user location based on country selection
+
+  if (navigator.geolocation) {
+    console.log("hello");
+  }
+  navigator.geolocation.getCurrentPosition(success, error);
+
+  function success(position) {
+    console.log(position);
+    let lat = position.coords.latitude;
+    let lng = position.coords.longitude;
+    let accuracy = position.coords.accuracy;
+    L.marker([lat, lng]).addTo(myMap);
+    L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+  }
+  function error(err) {
+    if (err.code === 1) {
+      alert("Please allow geolocation access");
+    } else {
+      alert("Browser do not support geolocation.");
+    }
+  }
+
+  //setting position of user
+  // function success(position) {
+  //   let latitude = position.coords.latitude;
+  //   let longitude = position.coords.longitude;
+  //   let accuracy = position.coords.accuracy;
+  //   L.marker([latitude, longitude]).addTo(myMap);
+  //   L.circle([latitude, longitude], { radius: accuracy }).addTo(myMap);
+  // }
+
+  easyButton = L.easyButton(" fa-circle-info fa-1.99x ", function (btn, map) {
     $("#myModal").modal("show");
   }).addTo(myMap);
 
