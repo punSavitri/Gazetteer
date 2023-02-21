@@ -4,7 +4,8 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
-$url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=savitri_pun2022&style=full';
+
+$url = 'http://api.geonames.org/addressJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=savitri_pun2022&style=full';
 
 
 $ch = curl_init();

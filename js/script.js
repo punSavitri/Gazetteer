@@ -7,7 +7,7 @@ var zoomed;
 var border;
 var easyButton;
 var easyButtonWeather;
-var markerCluster;
+
 $(document).ready(() => {
   //dropdown list of countries
   $.ajax({
@@ -33,7 +33,7 @@ $(document).ready(() => {
   });
 
   // create leaflet map object
-  myMap = L.map("map_div").setView([51.2665, 1.0924], 18);
+  myMap = L.map("map_div").setView([0, 0], 13);
 
   // Basemap
   lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -179,7 +179,8 @@ $(document).ready(() => {
         console.log(response);
         $("#title").append(response["data"]["geonames"][0]["title"]);
         $("#summary").append(response["data"]["geonames"][0]["summary"]);
-        $("#thumbnailImg").append(
+        $("#thumbnailImg").attr(
+          "src",
           response["data"]["geonames"][0]["thumbnailImg"]
         );
         $("#wikiLink").attr(
@@ -194,17 +195,19 @@ $(document).ready(() => {
   });
 
   //Getting user location based on country selection
+
   if (navigator.geolocation) {
     console.log("Browser support geolocation");
   }
   navigator.geolocation.getCurrentPosition(success, error);
 
+  let lat, lng, accuracy;
   function success(position) {
     console.log(position);
 
-    let lat = position.coords.latitude;
-    let lng = position.coords.longitude;
-    let accuracy = position.coords.accuracy;
+    lat = position.coords.latitude;
+    lng = position.coords.longitude;
+    accuracy = position.coords.accuracy;
 
     marker = L.marker([lat, lng]).addTo(myMap);
     circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
@@ -219,12 +222,28 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
+  $.ajax({
+    url: "php/getUserLocation.php",
+    type: "GET",
+    dataType: "json",
+    data: {
+      lat: lat, //get lat value from geolocation api
+      lng: lng, //get lng value from geolocation api as well
+    },
+    success: function (data) {
+      console.log(data);
+    },
+  });
 
-  easyButton = L.easyButton(" fa-circle-info fa-1.99x ", function (btn, map) {
+  easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
     $("#myModal").modal("show");
   }).addTo(myMap);
 
-  easyButtonWeather = L.easyButton("fa-cloud fa-1.99x", function (btn, map) {
+  easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
+    $("#myModal2").modal("show");
+  }).addTo(myMap);
+
+  easyButtonUserLocation = L.easyButton("fa-person fa-3x", function (btn, map) {
     $("#myModal2").modal("show");
   }).addTo(myMap);
 });
