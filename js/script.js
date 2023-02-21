@@ -177,12 +177,14 @@ $(document).ready(() => {
       },
       success: function (response) {
         console.log(response);
-        $("#title").append(response["data"][0]["title"]);
-        $("#summary").append(response["data"][0]["summary"]);
-        $("#thumbnailImg").append(response["data"][0]["thumbnailImg"]);
+        $("#title").append(response["data"]["geonames"][0]["title"]);
+        $("#summary").append(response["data"]["geonames"][0]["summary"]);
+        $("#thumbnailImg").append(
+          response["data"]["geonames"][0]["thumbnailImg"]
+        );
         $("#wikiLink").attr(
           "href",
-          "https://" + response.data.geonames[0].wikipediaUrl
+          "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
         );
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -190,22 +192,26 @@ $(document).ready(() => {
       },
     });
   });
-  //
-  //Getting user location based on country selection
 
+  //Getting user location based on country selection
   if (navigator.geolocation) {
-    console.log("hello");
+    console.log("Browser support geolocation");
   }
   navigator.geolocation.getCurrentPosition(success, error);
 
   function success(position) {
     console.log(position);
+
     let lat = position.coords.latitude;
     let lng = position.coords.longitude;
     let accuracy = position.coords.accuracy;
-    L.marker([lat, lng]).addTo(myMap);
-    L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+
+    marker = L.marker([lat, lng]).addTo(myMap);
+    circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+
+    myMap.fitBounds(circle.getBounds());
   }
+
   function error(err) {
     if (err.code === 1) {
       alert("Please allow geolocation access");
@@ -213,15 +219,6 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
-
-  //setting position of user
-  // function success(position) {
-  //   let latitude = position.coords.latitude;
-  //   let longitude = position.coords.longitude;
-  //   let accuracy = position.coords.accuracy;
-  //   L.marker([latitude, longitude]).addTo(myMap);
-  //   L.circle([latitude, longitude], { radius: accuracy }).addTo(myMap);
-  // }
 
   easyButton = L.easyButton(" fa-circle-info fa-1.99x ", function (btn, map) {
     $("#myModal").modal("show");
