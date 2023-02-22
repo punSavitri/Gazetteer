@@ -203,7 +203,6 @@ $(document).ready(() => {
   let lat, lng, accuracy;
   function success(position) {
     console.log(position);
-
     $.ajax({
       url: "php/getUserLocation.php",
       type: "GET",
@@ -214,6 +213,7 @@ $(document).ready(() => {
       },
       success: function (data) {
         console.log(data);
+
         // lat = position.coords.latitude;
         // lng = position.coords.longitude;
         // accuracy = position.coords.accuracy;
@@ -222,6 +222,9 @@ $(document).ready(() => {
         // circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
 
         // myMap.fitBounds(circle.getBounds());
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.textStatus);
       },
     });
   }
