@@ -29,7 +29,9 @@
 
   <body>
     <nav class="navbar bg-dark">
-      <div class="d-flex justify-content-left align-items-center text-light">
+      <div
+        class="d-flex flex-row col-md-4 justify-content-left align-items-center text-light"
+      >
         <a
           href="#sidebar"
           class="d-block mt-4 text-light"
@@ -39,6 +41,17 @@
         >
           Click to Wikipedia Search</a
         >
+        <div>
+          <a
+            href="#currencybar"
+            class="d-block mt-4 text-light"
+            data-bs-toggle="offcanvas"
+            role="button"
+            aria-controls="sidebar"
+          >
+            Current Currency Exchange Rates</a
+          >
+        </div>
       </div>
 
       <div
@@ -52,7 +65,7 @@
           <option>Please select country..</option>
         </select>
 
-        <!--offcanvas  -->
+        <!--offcanvas sidebar  -->
         <div
           class="offcanvas offcanvas-start"
           tabindex="-1"
@@ -64,8 +77,34 @@
               <b>Useful Information</b>
             </h5>
             <button
-              type="button
-        "
+              type="button        "
+              class="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="offcanvas-body">
+            <div id="output">
+              <p id="title"><b>Title:</b></p>
+              <p id="summary"><b>Summary:</b></p>
+              <img id="thumbnailImg" />
+              <a id="wikiLink">Click for more information about country</a>
+            </div>
+          </div>
+        </div>
+        <!-- second offcanvas for currency exchange rates -->
+        <div
+          class="offcanvas offcanvas-start"
+          tabindex="-1"
+          id="currencybar"
+          aria-labelledby="sidebar-label"
+        >
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebar-label">
+              <b>Useful Information</b>
+            </h5>
+            <button
+              type="button        "
               class="btn-close"
               data-bs-dismiss="offcanvas"
               aria-label="Close"

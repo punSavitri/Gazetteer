@@ -33,7 +33,7 @@ $(document).ready(() => {
   });
 
   // create leaflet map object
-  myMap = L.map("map_div").setView([0, 0], 13);
+  myMap = L.map("map_div").setView([0, 0], 8);
 
   // Basemap
   lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -194,8 +194,7 @@ $(document).ready(() => {
     });
   });
 
-  //Getting user location based on country selection
-
+  // Get User Location
   if (navigator.geolocation) {
     console.log("Browser support geolocation");
   }
@@ -205,14 +204,26 @@ $(document).ready(() => {
   function success(position) {
     console.log(position);
 
-    lat = position.coords.latitude;
-    lng = position.coords.longitude;
-    accuracy = position.coords.accuracy;
+    $.ajax({
+      url: "php/getUserLocation.php",
+      type: "GET",
+      dataType: "json",
+      data: {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      },
+      success: function (data) {
+        console.log(data);
+        // lat = position.coords.latitude;
+        // lng = position.coords.longitude;
+        // accuracy = position.coords.accuracy;
 
-    marker = L.marker([lat, lng]).addTo(myMap);
-    circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+        // marker = L.marker([lat, lng]).addTo(myMap);
+        // circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
 
-    myMap.fitBounds(circle.getBounds());
+        // myMap.fitBounds(circle.getBounds());
+      },
+    });
   }
 
   function error(err) {
@@ -222,18 +233,6 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
-  $.ajax({
-    url: "php/getUserLocation.php",
-    type: "GET",
-    dataType: "json",
-    data: {
-      lat: lat, //get lat value from geolocation api
-      lng: lng, //get lng value from geolocation api as well
-    },
-    success: function (data) {
-      console.log(data);
-    },
-  });
 
   easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
     $("#myModal").modal("show");

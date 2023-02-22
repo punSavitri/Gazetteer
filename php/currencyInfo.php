@@ -5,15 +5,21 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$url = 'http://api.geonames.org/countryCodeJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=savitri_pun2022&style=full';
+$url = 'https://api.currencyapi.com/v3/latest';
 
 
 $ch = curl_init();
+$headers = array(
+  "apikey:R3z8eIBPHJVWTyU8e3LVF8fULCwFPUnFplDMZ7UZ"
+);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_URL, $url);
 
+
 $result = curl_exec($ch);
+print_r($result);
 
 curl_close($ch);
 

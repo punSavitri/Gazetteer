@@ -17,4 +17,9 @@ html, body {
   padding: 15px 40px 15px 20px;
   color:#fff;
 }
+.offcanvas {
+  background-color: blue; 
+  width: 100%;
+  height: auto;
+}
 
