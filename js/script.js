@@ -33,15 +33,51 @@ $(document).ready(() => {
   });
 
   // create leaflet map object
-  myMap = L.map("map_div").setView([0, 0], 8);
+  myMap = L.map("map_div").fitWorld();
 
   // Basemap
   lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 13,
+    maxZoom: 19,
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   });
+  var stamenTerrain = L.tileLayer(
+    "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}",
+    {
+      attribution:
+        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: "abcd",
+      minZoom: 0,
+      maxZoom: 18,
+      ext: "png",
+    }
+  );
+  var stamenTonerLite = L.tileLayer(
+    "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}",
+    {
+      attribution:
+        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      subdomains: "abcd",
+      minZoom: 0,
+      maxZoom: 20,
+      ext: "png",
+    }
+  );
+
   myMap.addLayer(lyrOsm);
+
+  //leaflet layer control
+  var baseMaps = {
+    "Open Street Map": lyrOsm,
+    "Stamen Terrain": stamenTerrain,
+    "Stamen Toner Lite": stamenTonerLite,
+  };
+
+  // var overlayMaps = {
+  //   "Police Station": policeStation,
+  //   Airports: airports,
+  // };
+  L.control.layers(baseMaps).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
@@ -72,6 +108,16 @@ $(document).ready(() => {
             opacity: 1,
             fillOpacity: 0.3,
           };
+        }
+
+        var feature = L.geoJSON(data.data, {
+          onEachFeature: funcForEachFeature,
+        }).addTo(myMap);
+
+        function funcForEachFeature(feature, layer) {
+          if (feature.geometry && feature.geometry.coordinates) {
+            layer.bindPopup(feature.geometry.coordinates);
+          }
         }
 
         myMap.fitBounds(border.getBounds());
@@ -213,15 +259,19 @@ $(document).ready(() => {
       },
       success: function (data) {
         console.log(data);
+        $("#select_country").val(data.data.countryCode).change();
 
-        // lat = position.coords.latitude;
-        // lng = position.coords.longitude;
-        // accuracy = position.coords.accuracy;
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+        accuracy = position.coords.accuracy;
 
-        // marker = L.marker([lat, lng]).addTo(myMap);
-        // circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+        marker = L.marker([lat, lng])
+          .addTo(myMap)
+          .bindPopup("You are within " + accuracy + " meters from this point")
+          .openPopup();
+        circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
 
-        // myMap.fitBounds(circle.getBounds());
+        myMap.fitBounds(circle.getBounds());
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
@@ -242,7 +292,7 @@ $(document).ready(() => {
   }).addTo(myMap);
 
   easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
-    $("#myModal2").modal("show");
+    $("#myModal2").modal("toggle");
   }).addTo(myMap);
 
   easyButtonUserLocation = L.easyButton("fa-person fa-3x", function (btn, map) {
