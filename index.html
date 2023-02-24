@@ -31,7 +31,7 @@
   </head>
 
   <body>
-    <nav class="navbar bg-dark">
+    <nav class="navbar bg-info">
       <div
         class="d-flex flex-row col-md-4 justify-content-left align-items-center text-light"
       >
@@ -58,15 +58,17 @@
       </div>
 
       <div
-        class="container d-flex justify-content-left align-items-center col-md-3"
+        class="container d-flex flex-row justify-content-left align-items-center col-md-3"
       >
+        <label for="select_country" class="text info"
+          >Please select country from the list:</label
+        >
         <select
           class="form-select form-select-md fs-6"
           aria-label=".form-select-md example"
           id="select_country"
-        >
-          <option>Please select country..</option>
-        </select>
+          name="select_country"
+        ></select>
 
         <!--offcanvas sidebar  -->
         <div

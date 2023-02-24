@@ -7,6 +7,7 @@ var zoomed;
 var border;
 var easyButton;
 var easyButtonWeather;
+var lat, lng, accuracy;
 
 $(document).ready(() => {
   //dropdown list of countries
@@ -108,16 +109,6 @@ $(document).ready(() => {
             opacity: 1,
             fillOpacity: 0.3,
           };
-        }
-
-        var feature = L.geoJSON(data.data, {
-          onEachFeature: funcForEachFeature,
-        }).addTo(myMap);
-
-        function funcForEachFeature(feature, layer) {
-          if (feature.geometry && feature.geometry.coordinates) {
-            layer.bindPopup(feature.geometry.coordinates);
-          }
         }
 
         myMap.fitBounds(border.getBounds());
@@ -246,7 +237,6 @@ $(document).ready(() => {
   }
   navigator.geolocation.getCurrentPosition(success, error);
 
-  let lat, lng, accuracy;
   function success(position) {
     console.log(position);
     $.ajax({
