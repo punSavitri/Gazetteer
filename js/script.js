@@ -8,6 +8,7 @@ var border;
 var easyButton;
 var easyButtonWeather;
 var lat, lng, accuracy;
+var bounds;
 
 $(document).ready(() => {
   //dropdown list of countries
@@ -113,8 +114,8 @@ $(document).ready(() => {
 
         myMap.fitBounds(border.getBounds());
       },
-      error: function (error) {
-        console.log(error);
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.textStatus);
       },
     });
 
@@ -268,7 +269,6 @@ $(document).ready(() => {
       },
     });
   }
-
   function error(err) {
     if (err.code === 1) {
       alert("Please allow geolocation access");
@@ -276,6 +276,26 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
+
+  //citiesInfo and set marker on cities
+  $.ajax({
+    url: "php/citiesInfo.php",
+    type: "GET",
+    dataType: "json",
+    data: {
+      //parameter value got from countryInfo
+      north: result["data"][0]["north"],
+      south: result["data"][0]["south"],
+      east: result["data"][0]["east"],
+      west: result["data"][0]["west"],
+    },
+    success: function (data) {
+      console.log(data);
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.log(jqXHR.textStatus);
+    },
+  });
 
   easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
     $("#myModal").modal("show");
