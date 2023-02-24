@@ -140,6 +140,25 @@ $(document).ready(() => {
         $("#currencyCode").append(result["data"][0]["currencyCode"]);
 
         $("#myModal").modal("show");
+        //citiesInfo and set marker on cities
+        $.ajax({
+          url: "php/citiesInfo.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            //parameter value got from countryInfo
+            north: result["data"][0]["north"],
+            south: result["data"][0]["south"],
+            east: result["data"][0]["east"],
+            west: result["data"][0]["west"],
+          },
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         $.ajax({
           url: "php/countryWeatherInfo.php",
@@ -276,26 +295,6 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
-
-  //citiesInfo and set marker on cities
-  $.ajax({
-    url: "php/citiesInfo.php",
-    type: "GET",
-    dataType: "json",
-    data: {
-      //parameter value got from countryInfo
-      north: result["data"][0]["north"],
-      south: result["data"][0]["south"],
-      east: result["data"][0]["east"],
-      west: result["data"][0]["west"],
-    },
-    success: function (data) {
-      console.log(data);
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      console.log(jqXHR.textStatus);
-    },
-  });
 
   easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
     $("#myModal").modal("show");
