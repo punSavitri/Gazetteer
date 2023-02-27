@@ -137,9 +137,24 @@ $(document).ready(() => {
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
-        $("#currencyCode").append(result["data"][0]["currencyCode"]);
 
         $("#myModal").modal("show");
+
+        //exchange rate based on currencyCode
+        $.ajax({
+          url: "php/exchangeRate.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            currencies: result["data"][0]["currencyCode"],
+          },
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
         //citiesInfo and set marker on cities
         $.ajax({
           url: "php/citiesInfo.php",
@@ -152,8 +167,24 @@ $(document).ready(() => {
             east: result["data"][0]["east"],
             west: result["data"][0]["west"],
           },
-          success: function (data) {
-            console.log(data);
+          success: function (response) {
+            console.log(response);
+            var latitude = response.data[0].lat;
+            var longitude = response.data[0].lng;
+
+            var iconOptions = {
+              iconUrl: "images/city.png",
+              iconSize: [40, 40],
+            };
+            var customIcon = L.icon(iconOptions);
+            var markerOptions = {
+              icon: customIcon,
+              draggable: true,
+            };
+            var cityMarker = L.marker([latitude, longitude], markerOptions)
+              .addTo(myMap)
+              .bindPopup("<b>City: " + response.data[0].name + "</b>")
+              .openPopup();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -215,22 +246,21 @@ $(document).ready(() => {
             $("#myModal2").modal("show");
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR);
+            console.log(jqXHR.textStatus);
           },
-
-          //
         });
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
+        console.log(jqXHR.textStatus);
       },
     });
+
     $.ajax({
       url: "php/wikipediaSearch.php",
       type: "GET",
       dataType: "json",
       data: {
-        placename: $("#select_country option:selected").text(),
+        placename: $("#select_country").val(),
       },
       success: function (response) {
         console.log(response);
@@ -246,7 +276,7 @@ $(document).ready(() => {
         );
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
+        console.log(jqXHR.textStatus);
       },
     });
   });
@@ -275,11 +305,29 @@ $(document).ready(() => {
         lng = position.coords.longitude;
         accuracy = position.coords.accuracy;
 
-        marker = L.marker([lat, lng])
+        var iconOptionsTwo = {
+          iconUrl: "images/person.png",
+          iconSize: [40, 40],
+        };
+        var customIconTwo = L.icon(iconOptionsTwo);
+        var markerOption = {
+          icon: customIconTwo,
+          draggable: true,
+        };
+        var cityMarker = L.marker([lat, lng], markerOption)
           .addTo(myMap)
-          .bindPopup("You are within " + accuracy + " meters from this point")
+          .bindPopup("<b>Your are in " + data.data.countryName + ".</b>")
           .openPopup();
-        circle = L.circle([lat, lng], { radius: accuracy }).addTo(myMap);
+        circle = L.circle([lat, lng], {
+          radius: accuracy,
+          stroke: true,
+          color: "black",
+          opacity: 1,
+          weight: 1,
+          fill: true,
+          fillColor: "yellow",
+          fillOpacity: 0.2,
+        }).addTo(myMap);
 
         myMap.fitBounds(circle.getBounds());
       },

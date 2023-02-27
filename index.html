@@ -31,44 +31,35 @@
   </head>
 
   <body>
-    <nav class="navbar bg-info">
-      <div
-        class="d-flex flex-row col-md-4 justify-content-left align-items-center text-light"
-      >
-        <a
-          href="#sidebar"
-          class="d-block mt-4 text-light"
-          data-bs-toggle="offcanvas"
-          role="button"
-          aria-controls="sidebar"
-        >
-          Click to Wikipedia Search</a
-        >
-        <div>
-          <a
-            href="#currencybar"
-            class="d-block mt-4 text-light"
-            data-bs-toggle="offcanvas"
-            role="button"
-            aria-controls="sidebar"
-          >
-            Current Currency Exchange Rates</a
-          >
-        </div>
-      </div>
+    <div class="navbar">
+      <nav>
+        <div class="container">
+          <div class="d-inline-flex flex-row mt-2">
+            <div class="wikiContainer">
+              <a
+                href="#sidebar"
+                class="d-block mt-4 text-dark"
+                data-bs-toggle="offcanvas"
+                role="button"
+                aria-controls="sidebar"
+              >
+                Click For Wikipedia Search</a
+              >
+            </div>
+          </div>
 
-      <div
-        class="container d-flex flex-row justify-content-left align-items-center col-md-3"
-      >
-        <label for="select_country">
-          Please select country from the list:</label
-        >
-        <select
-          class="form-select form-select-md fs-6"
-          aria-label=".form-select-md example"
-          id="select_country"
-          name="select_country"
-        ></select>
+          <div class="d-inline-flex flex-row justify-content-center">
+            <label for="select_country">
+              Please select country from the list:</label
+            >
+            <select
+              class="form-select form-select-md fs-6"
+              aria-label=".form-select-md example"
+              id="select_country"
+              name="select_country"
+            ></select>
+          </div>
+        </div>
 
         <!--offcanvas sidebar  -->
         <div
@@ -92,40 +83,17 @@
             <div id="output">
               <p id="title"><b>Title:</b></p>
               <p id="summary"><b>Summary:</b></p>
-              <img id="thumbnailImg" />
-              <a id="wikiLink">Click for more information about country</a>
+              <p>
+                <img id="thumbnailImg" width="150px" height="100px" />
+              </p>
+              <p>
+                <a id="wikiLink">Click for more information about country</a>
+              </p>
             </div>
           </div>
         </div>
-        <!-- second offcanvas for currency exchange rates -->
-        <div
-          class="offcanvas offcanvas-start"
-          tabindex="-1"
-          id="currencybar"
-          aria-labelledby="sidebar-label"
-        >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="sidebar-label">
-              <b>Useful Information</b>
-            </h5>
-            <button
-              type="button        "
-              class="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="offcanvas-body">
-            <div id="output">
-              <p id="title"><b>Title:</b></p>
-              <p id="summary"><b>Summary:</b></p>
-              <img id="thumbnailImg" />
-              <a id="wikiLink">Click for more information about country</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
 
     <div id="map_div"></div>
 
@@ -141,7 +109,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1
-              class="modal-title text-light align-items-center fs-2"
+              class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Country Information
@@ -155,25 +123,23 @@
           </div>
           <div class="modal-body">
             <div id="country_info">
-              <div id="country" class="text-dark fs-5 align-items-center">
+              <div id="country" class="text-dark align-items-center">
                 <b>Country:</b>
               </div>
-              <div id="continent" class="text-dark fs-5 align-items-center">
+              <div id="continent" class="text-dark align-items-center">
                 <b>Continent:</b>
               </div>
-              <div id="capital" class="text-dark fs-5 align-items-center">
+              <div id="capital" class="text-dark align-items-center">
                 <b>Capital City:</b>
               </div>
-              <div id="population" class="text-dark fs-5 align-items-center">
+              <div id="population" class="text-dark align-items-center">
                 <b>Population:</b>
               </div>
-              <div id="languages" class="text-dark fs-5 align-items-center">
+              <div id="languages" class="text-dark align-items-center">
                 <b>Languages:</b>
               </div>
-              <div id="currencyCode" class="text-dark fs-5 align-items-center">
-                <b>Currency Code:</b>
-              </div>
             </div>
+
             <div class="modal-footer">
               <button
                 type="button"
@@ -201,9 +167,9 @@
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header bg-primary">
+          <div class="modal-header">
             <h1
-              class="modal-title text-light align-items-center fs-2"
+              class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Weather Status
@@ -216,7 +182,7 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div id="weather_info"></div>
+            <div id="weather_info"><!--assign data from API--></div>
             <div class="modal-footer">
               <button
                 type="button"
@@ -229,6 +195,64 @@
                 Save changes
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal 3 for exchange rate -->
+
+    <div
+      class="modal fade"
+      id="exchangeRateModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title d-flex justify-content-center align-items-center"
+              id="modalLabel"
+            >
+              Current Exchange Rate
+            </h1>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="container">
+              <div class="d-flex flex-row">
+                <div>
+                  <img
+                    src="images/exchange.png"
+                    class="exchange_img"
+                    alt=""
+                    width="60px"
+                    height="60px"
+                  />
+                </div>
+                <div>
+                  <h6>Today's current Exchange Rate</h6>
+                </div>
+              </div>
+              <div id="exchange-rate"><!--get rate from api--></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>

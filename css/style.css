@@ -1,3 +1,8 @@
+:root {
+  --primary-color:#ffff80;
+  --secondary-color:black;
+  
+}
 body {
   padding: 0;
   margin: 0;
@@ -5,6 +10,9 @@ body {
 html, body, #map {
   height: 100%;
   width: 100vw;
+}
+.navbar {
+  background-color: #ffffcc;
 }
 
 #map_div {
@@ -14,13 +22,73 @@ html, body, #map {
   padding: 0;
 }
   .modal-header  {
-  background:#68a6b1;
-  padding: 15px 40px 15px 20px;
-  color:#fff;
+  background:var(--primary-color)
+;  padding: 15px 40px 15px 20px;
+  
+}
+.modal-title {
+  color:var(--secondary-color);
+}
+.modal-footer {
+  background-color: var(--primary-color);
+  margin:auto;
+  padding: 5px 5px;
 }
 .offcanvas {
-  background-color: lightcyan; 
+  background-color: var(--primary-color); 
   width: 100%;
   height: auto;
 }
 
+
+/* .wrapper {
+  display: flex;
+  justify-content:flex-start;
+  align-items:flex-start;
+  flex-direction: column;
+  padding:5px 5px;
+  margin:0;
+  
+}
+ h6 {
+  color:black;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  
+}
+div img {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+    
+}
+.currency {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+   
+}
+.currency select{
+  padding: 10px 20px 10px 10px;
+  
+  border: 2px solid #ffffb3;
+}
+.currency input{
+  border:0;
+  font-size: 30px;
+  text-align: right;
+}
+.convertContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rate {
+  color:var(--primary-color);
+  font-size: 16px;
+  padding: 0 10px;
+}
+select:focus, input:focus, button:focus{
+  outline:0;
+} */
+/*  */
