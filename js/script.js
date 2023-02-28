@@ -150,6 +150,8 @@ $(document).ready(() => {
           },
           success: function (data) {
             console.log(data);
+
+            $("#exchangeRate").append(data.data.code + data.data.value);
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);

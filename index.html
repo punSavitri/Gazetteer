@@ -34,7 +34,7 @@
     <div class="navbar">
       <nav>
         <div class="container">
-          <div class="d-inline-flex flex-row mt-2">
+          <div class="d-flex flex-row mt-2">
             <div class="wikiContainer">
               <a
                 href="#sidebar"
@@ -48,7 +48,9 @@
             </div>
           </div>
 
-          <div class="d-inline-flex flex-row justify-content-center">
+          <!-- dropdown country list -->
+
+          <div class="d-flex flex-column justify-content-end align-items-end">
             <label for="select_country">
               Please select country from the list:</label
             >
@@ -138,6 +140,9 @@
               <div id="languages" class="text-dark align-items-center">
                 <b>Languages:</b>
               </div>
+              <div id="exchangeRate" class="text-dark align-items-center">
+                <b>Currency Value in $</b>
+              </div>
             </div>
 
             <div class="modal-footer">
@@ -195,64 +200,6 @@
                 Save changes
               </button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- modal 3 for exchange rate -->
-
-    <div
-      class="modal fade"
-      id="exchangeRateModal"
-      tabindex="-1"
-      aria-labelledby="modalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1
-              class="modal-title d-flex justify-content-center align-items-center"
-              id="modalLabel"
-            >
-              Current Exchange Rate
-            </h1>
-            <button
-              type="button"
-              class="btn-close text-dark"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="container">
-              <div class="d-flex flex-row">
-                <div>
-                  <img
-                    src="images/exchange.png"
-                    class="exchange_img"
-                    alt=""
-                    width="60px"
-                    height="60px"
-                  />
-                </div>
-                <div>
-                  <h6>Today's current Exchange Rate</h6>
-                </div>
-              </div>
-              <div id="exchange-rate"><!--get rate from api--></div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
