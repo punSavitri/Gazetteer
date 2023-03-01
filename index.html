@@ -31,71 +31,28 @@
   </head>
 
   <body>
-    <div class="navbar">
-      <nav>
-        <div class="container">
-          <div class="d-flex flex-row mt-2">
-            <div class="wikiContainer">
-              <a
-                href="#sidebar"
-                class="d-block mt-4 text-dark"
-                data-bs-toggle="offcanvas"
-                role="button"
-                aria-controls="sidebar"
-              >
-                Click For Wikipedia Search</a
-              >
-            </div>
-          </div>
-
-          <!-- dropdown country list -->
-
-          <div class="d-flex flex-column justify-content-end align-items-end">
-            <label for="select_country">
-              Please select country from the list:</label
-            >
-            <select
-              class="form-select form-select-md fs-6"
-              aria-label=".form-select-md example"
-              id="select_country"
-              name="select_country"
-            ></select>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <div class="wikiContainer p-2 fs-4">
+            <button class="btn wikiSearch">
+              <a href="#wikiModal"> Click For Wikipedia Search</a>
+            </button>
           </div>
         </div>
-
-        <!--offcanvas sidebar  -->
-        <div
-          class="offcanvas offcanvas-start"
-          tabindex="-1"
-          id="sidebar"
-          aria-labelledby="sidebar-label"
-        >
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="sidebar-label">
-              <b>Useful Information</b>
-            </h5>
-            <button
-              type="button        "
-              class="btn-close"
-              data-bs-dismiss="offcanvas"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="offcanvas-body">
-            <div id="output">
-              <p id="title"><b>Title:</b></p>
-              <p id="summary"><b>Summary:</b></p>
-              <p>
-                <img id="thumbnailImg" width="150px" height="100px" />
-              </p>
-              <p>
-                <a id="wikiLink">Click for more information about country</a>
-              </p>
-            </div>
-          </div>
+        <div class="d-flex flex-column me-5">
+          <label for="select_country">
+            Please select country from the list:</label
+          >
+          <select
+            class="form-select form-select-md fs-6"
+            aria-label="form-select-md example"
+            id="select_country"
+            name="select_country"
+          ></select>
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
 
     <div id="map_div"></div>
 
@@ -200,6 +157,57 @@
                 Save changes
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal 3 wikipedia search -->
+    <div
+      class="modal fade"
+      id="wikiModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title d-flex justify-content-center align-items-center"
+              id="modalLabel"
+            >
+              About Country
+            </h1>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="output">
+              <p id="title"><b>Title:</b></p>
+              <p id="summary"><b>Summary:</b></p>
+              <p>
+                <img id="thumbnailImg" width="150px" height="100px" />
+              </p>
+              <p>
+                <a id="wikiLink">Click for more information about country</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>

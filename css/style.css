@@ -14,6 +14,15 @@ html, body, #map {
 .navbar {
   background-color: #ffffcc;
 }
+a:link{
+  color:rgb(38, 158, 38);
+  text-decoration-color:hotpink ;
+}
+a:hover{
+  color:blue;
+  text-decoration: none;
+}
+
 
 #map_div {
   width:100%;

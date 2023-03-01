@@ -150,8 +150,8 @@ $(document).ready(() => {
           },
           success: function (data) {
             console.log(data);
-
-            $("#exchangeRate").append(data.data.code + data.data.value);
+            let code = data.data.code;
+            console.log(code);
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -276,6 +276,10 @@ $(document).ready(() => {
           "href",
           "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
         );
+        $("#wikiModal").modal("show");
+        $(".wikiSearch").click(function () {
+          $("#wikiModal").modal("show");
+        });
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
