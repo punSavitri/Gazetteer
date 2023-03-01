@@ -150,7 +150,7 @@ $(document).ready(() => {
           },
           success: function (data) {
             console.log(data);
-            let code = data.data.code;
+            let code = Object.keys(data.data);
             console.log(code);
           },
           error: function (jqXHR, textStatus, errorThrown) {
