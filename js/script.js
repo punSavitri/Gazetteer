@@ -9,6 +9,8 @@ var easyButton;
 var easyButtonWeather;
 var lat, lng, accuracy;
 var bounds;
+var earthquakeMarker;
+var userMarker;
 
 $(document).ready(() => {
   //dropdown list of countries
@@ -76,10 +78,10 @@ $(document).ready(() => {
   };
 
   // var overlayMaps = {
-  //   "Police Station": policeStation,
-  //   Airports: airports,
+  //   "Capital City": cityMarker,
+  //   Earthquake: earthquakeMarker,
   // };
-  L.control.layers(baseMaps).addTo(myMap);
+  // L.control.layers(baseMaps, overlayMaps).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
@@ -138,6 +140,12 @@ $(document).ready(() => {
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
 
+        setTimeout(function () {
+          $("#myModal").modal("show");
+        }, 1000);
+        setTimeout(function () {
+          $("#myModal2").modal("show");
+        });
         $("#myModal").modal("show");
 
         //exchange rate based on currencyCode
@@ -150,8 +158,56 @@ $(document).ready(() => {
           },
           success: function (data) {
             console.log(data);
-            let code = Object.keys(data.data);
+            let code = data.data.data[Object.keys(data.data.data)[0]].code;
+            let value = data.data.data[Object.keys(data.data.data)[0]].value;
+            value = value.toFixed(2);
             console.log(code);
+            console.log(value);
+            $("#exchangeRate").append(
+              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+            );
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
+        // earthquake info based on country selection
+        $.ajax({
+          url: "php/earthquakeInfo.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            north: result["data"][0]["north"],
+            south: result["data"][0]["south"],
+            east: result["data"][0]["east"],
+            west: result["data"][0]["west"],
+          },
+          success: function (output) {
+            console.log(output);
+
+            let lat = output.data[0].lat;
+            let lng = output.data[0].lng;
+            var iconOptions = {
+              iconUrl: "images/earthquake.png",
+              iconSize: [40, 40],
+            };
+            var customIcon = L.icon(iconOptions);
+            var markerOptions = {
+              icon: customIcon,
+              draggable: true,
+            };
+            earthquakeMarker = L.marker([lat, lng], markerOptions)
+              .addTo(myMap)
+              .bindTooltip(
+                "<div><p><b>Earthquake Information</b><br><b>Date and Time:</b> " +
+                  output.data[0].datetime +
+                  "<br><b>Depth:</b> " +
+                  output.data[0].depth +
+                  "<br><b>Magnitude:</b> " +
+                  output.data[0].magnitude +
+                  "</p></div>"
+              )
+              .openTooltip();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -183,10 +239,10 @@ $(document).ready(() => {
               icon: customIcon,
               draggable: true,
             };
-            var cityMarker = L.marker([latitude, longitude], markerOptions)
+            cityMarker = L.marker([latitude, longitude], markerOptions)
               .addTo(myMap)
-              .bindPopup("<b>City: " + response.data[0].name + "</b>")
-              .openPopup();
+              .bindTooltip("<b>Capital City: " + response.data[0].name + "</b>")
+              .openTooltip();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -245,7 +301,7 @@ $(document).ready(() => {
                 "&deg;</p></div>"
             );
 
-            $("#myModal2").modal("show");
+            // $("#myModal2").modal("show");
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -311,19 +367,19 @@ $(document).ready(() => {
         lng = position.coords.longitude;
         accuracy = position.coords.accuracy;
 
-        var iconOptionsTwo = {
+        var iconOptions = {
           iconUrl: "images/person.png",
           iconSize: [40, 40],
         };
-        var customIconTwo = L.icon(iconOptionsTwo);
+        var customIcon = L.icon(iconOptions);
         var markerOption = {
-          icon: customIconTwo,
+          icon: customIcon,
           draggable: true,
         };
-        var cityMarker = L.marker([lat, lng], markerOption)
+        var userMarker = L.marker([lat, lng], markerOption)
           .addTo(myMap)
-          .bindPopup("<b>Your are in " + data.data.countryName + ".</b>")
-          .openPopup();
+          .bindTooltip("<b>You are in " + data.data.countryName + ".</b>")
+          .openTooltip();
         circle = L.circle([lat, lng], {
           radius: accuracy,
           stroke: true,
@@ -334,6 +390,14 @@ $(document).ready(() => {
           fillColor: "yellow",
           fillOpacity: 0.2,
         }).addTo(myMap);
+        var lc = L.control
+          .locate({
+            position: "topleft",
+            strings: {
+              title: "Show My Location",
+            },
+          })
+          .addTo(myMap);
 
         myMap.fitBounds(circle.getBounds());
       },
@@ -350,17 +414,22 @@ $(document).ready(() => {
     }
   }
 
-  easyButton = L.easyButton(" fa-circle-info fa-2x ", function (btn, map) {
-    $("#myModal").modal("show");
+  easyButton = L.easyButton("fa-circle-info fa-2x", function (btn, map) {
+    $("#myModal").modal("toggle");
   }).addTo(myMap);
 
   easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
     $("#myModal2").modal("toggle");
   }).addTo(myMap);
 
-  easyButtonUserLocation = L.easyButton("fa-person fa-3x", function (btn, map) {
-    $("#myModal2").modal("show");
-  }).addTo(myMap);
+  // var lc = L.control
+  //   .locate({
+  //     position: "topleft",
+  //     strings: {
+  //       title: "Show My Location",
+  //     },
+  //   })
+  //   .addTo(myMap);
 });
 
 //easyButton global variable

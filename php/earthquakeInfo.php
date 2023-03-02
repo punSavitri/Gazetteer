@@ -5,21 +5,15 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$url = 'https://api.currencyapi.com/v3/latest';
+$url = 'http://api.geonames.org/earthquakesJSON?formatted=true&north=' . $_REQUEST['north'] . '&south=' . $_REQUEST['south'] . '&east=' . $_REQUEST['east'] . '&west=' . $_REQUEST['west'] . '&username=savitri_pun2022&style=full';
 
 
 $ch = curl_init();
-$headers = array(
-  "apikey:R3z8eIBPHJVWTyU8e3LVF8fULCwFPUnFplDMZ7UZ"
-);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_URL, $url);
 
-
 $result = curl_exec($ch);
-print_r($result);
 
 curl_close($ch);
 
@@ -29,7 +23,7 @@ $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-$output['data'] = $decode;
+$output['data'] = $decode['earthquakes'];
 
 header('Content-Type: application/json; charset=UTF-8');
 
