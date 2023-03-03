@@ -7,10 +7,11 @@ var zoomed;
 var border;
 var easyButton;
 var easyButtonWeather;
-var lat, lng, accuracy;
+
 var bounds;
 var earthquakeMarker;
 var userMarker;
+var cluster;
 
 $(document).ready(() => {
   //dropdown list of countries
@@ -69,6 +70,8 @@ $(document).ready(() => {
   );
 
   myMap.addLayer(lyrOsm);
+  //create marker cluster group
+  cluster = L.markerClusterGroup();
 
   //leaflet layer control
   var baseMaps = {
@@ -247,8 +250,13 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
-
-                // var markers = L.markerClusterGroup();
+                for (let i = 0; i < output.data.poi.length; i++) {
+                  let latitude = output.data.poi[0].lat;
+                  let longitude = output.data.poi[0].lng;
+                  let marker = L.marker(latitude, longitude);
+                  cluster.addLayer(marker);
+                }
+                myMap.addLayer(cluster);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -259,7 +267,7 @@ $(document).ready(() => {
             console.log(jqXHR.textStatus);
           },
         });
-
+        //weather information of selected country
         $.ajax({
           url: "php/countryWeatherInfo.php",
           type: "GET",
@@ -321,7 +329,7 @@ $(document).ready(() => {
         console.log(jqXHR.textStatus);
       },
     });
-
+// wikipedia search about selected country
     $.ajax({
       url: "php/wikipediaSearch.php",
       type: "GET",
@@ -348,7 +356,7 @@ $(document).ready(() => {
     });
   });
 
-  // Get User Location
+  // Get User Location and country 
   if (navigator.geolocation) {
     console.log("Browser support geolocation");
   }
