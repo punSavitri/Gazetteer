@@ -140,14 +140,6 @@ $(document).ready(() => {
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
 
-        setTimeout(function () {
-          $("#myModal").modal("show");
-        }, 1000);
-        setTimeout(function () {
-          $("#myModal2").modal("show");
-        });
-        $("#myModal").modal("show");
-
         //exchange rate based on currencyCode
         $.ajax({
           url: "php/exchangeRate.php",
@@ -243,6 +235,25 @@ $(document).ready(() => {
               .addTo(myMap)
               .bindTooltip("<b>Capital City: " + response.data[0].name + "</b>")
               .openTooltip();
+
+            //point of interest in selected country and show as cluster group on map
+            $.ajax({
+              url: "php/pointOfInterestInfo.php",
+              type: "GET",
+              dataType: "json",
+              data: {
+                lat: response.data[0].lat,
+                lng: response.data[0].lng,
+              },
+              success: function (output) {
+                console.log(output);
+
+                // var markers = L.markerClusterGroup();
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.textStatus);
+              },
+            });
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -300,8 +311,6 @@ $(document).ready(() => {
                 data.data.wind.deg +
                 "&deg;</p></div>"
             );
-
-            // $("#myModal2").modal("show");
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -332,10 +341,6 @@ $(document).ready(() => {
           "href",
           "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
         );
-        $("#wikiModal").modal("show");
-        $(".wikiSearch").click(function () {
-          $("#wikiModal").modal("show");
-        });
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
@@ -413,6 +418,10 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
+
+  $(".btn").click(function () {
+    $("#wikiModal").modal("show");
+  });
 
   easyButton = L.easyButton("fa-circle-info fa-2x", function (btn, map) {
     $("#myModal").modal("toggle");
