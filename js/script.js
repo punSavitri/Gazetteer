@@ -30,6 +30,14 @@ $(document).ready(() => {
           `<option value="${data.data[i].properties.iso_a2}">${data.data[i].properties.name}</option>`
         );
       }
+
+      //display country flag for selected country
+      let countrycode = data.data[0].properties.iso_a2;
+      console.log(countrycode);
+      $("#flagImg").attr(
+        "src",
+        "https://countryflagsapi.com/png/" + countrycode
+      );
     },
 
     error: function (jqXHR, textStatus, errorThrown) {
@@ -80,11 +88,7 @@ $(document).ready(() => {
     "Stamen Toner Lite": stamenTonerLite,
   };
 
-  // var overlayMaps = {
-  //   "Capital City": cityMarker,
-  //   Earthquake: earthquakeMarker,
-  // };
-  // L.control.layers(baseMaps, overlayMaps).addTo(myMap);
+  L.control.layers(baseMaps).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
@@ -136,16 +140,12 @@ $(document).ready(() => {
       },
       success: function (result) {
         console.log(result);
-        $("#flagImg").attr(
-          <img src="https://countryflagsapi.com/png/" />,
-          result["data"][0]["countryCode"]
-        );
+
         $("#country").append(result["data"][0]["countryName"]);
         $("#continent").append(result["data"][0]["continent"]);
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
-        //display countryflag for selected country
 
         //exchange rate based on currencyCode
         // $.ajax({
@@ -170,6 +170,7 @@ $(document).ready(() => {
         //     console.log(jqXHR.textStatus);
         //   },
         // });
+
         // earthquake info based on country selection
         $.ajax({
           url: "php/earthquakeInfo.php",
@@ -193,7 +194,6 @@ $(document).ready(() => {
             var customIcon = L.icon(iconOptions);
             var markerOptions = {
               icon: customIcon,
-              draggable: true,
             };
             earthquakeMarker = L.marker([lat, lng], markerOptions)
               .addTo(myMap)
@@ -212,6 +212,7 @@ $(document).ready(() => {
             console.log(jqXHR.textStatus);
           },
         });
+
         //citiesInfo and set marker on cities
         $.ajax({
           url: "php/citiesInfo.php",
@@ -236,7 +237,6 @@ $(document).ready(() => {
             var customIcon = L.icon(iconOptions);
             var markerOptions = {
               icon: customIcon,
-              draggable: true,
             };
             cityMarker = L.marker([latitude, longitude], markerOptions)
               .addTo(myMap)
@@ -436,7 +436,7 @@ $(document).ready(() => {
     }
   }
 
-  $(".btn").click(function () {
+  $(".btn-link").click(function () {
     $("#wikiModal").modal("show");
   });
 
@@ -447,15 +447,4 @@ $(document).ready(() => {
   easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
     $("#myModal2").modal("toggle");
   }).addTo(myMap);
-
-  // var lc = L.control
-  //   .locate({
-  //     position: "topleft",
-  //     strings: {
-  //       title: "Show My Location",
-  //     },
-  //   })
-  //   .addTo(myMap);
 });
-
-//easyButton global variable
