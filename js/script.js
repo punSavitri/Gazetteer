@@ -142,6 +142,21 @@ $(document).ready(() => {
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
+        //countryflag
+        $.ajax({
+          url: "php/countryFlag.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            countrycode: result["data"][0]["countryCode"],
+          },
+          success: function (resp) {
+            console.log(resp);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         //exchange rate based on currencyCode
         $.ajax({
@@ -251,9 +266,11 @@ $(document).ready(() => {
               success: function (output) {
                 console.log(output);
                 for (let i = 0; i < output.data.poi.length; i++) {
-                  let latitude = output.data.poi[0].lat;
-                  let longitude = output.data.poi[0].lng;
-                  let marker = L.marker(latitude, longitude);
+                  let latitude = output.data.poi[i].lat;
+                  let longitude = output.data.poi[i].lng;
+                  console.log(latitude);
+                  console.log(longitude);
+                  let marker = L.marker([latitude, longitude]);
                   cluster.addLayer(marker);
                 }
                 myMap.addLayer(cluster);
@@ -329,7 +346,7 @@ $(document).ready(() => {
         console.log(jqXHR.textStatus);
       },
     });
-// wikipedia search about selected country
+    // wikipedia search about selected country
     $.ajax({
       url: "php/wikipediaSearch.php",
       type: "GET",
@@ -356,7 +373,7 @@ $(document).ready(() => {
     });
   });
 
-  // Get User Location and country 
+  // Get User Location and country
   if (navigator.geolocation) {
     console.log("Browser support geolocation");
   }
@@ -403,9 +420,12 @@ $(document).ready(() => {
           fillColor: "yellow",
           fillOpacity: 0.2,
         }).addTo(myMap);
+
         var lc = L.control
           .locate({
             position: "topleft",
+            setView: true,
+            maxZoom: 16,
             strings: {
               title: "Show My Location",
             },
