@@ -21,7 +21,7 @@ a:hover{
   color:blue;
   text-decoration: none;
 }
-.btn{
+.btn-link{
   display:inline-block;
   padding:5px 10px;
   font-size:16px;
@@ -36,11 +36,11 @@ a:hover{
   font-weight: bold;
   
 }
- .btn:hover{
+ .btn-link:hover{
   background-color:#3e8e41;
   color:white;
 }
- .btn:active{
+ .btn-link:active{
   background-color:#3e8e41;
   box-shadow: 0 5px #666;
   transform:translateY(4px);

@@ -5,8 +5,7 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-// $url = 'https://countryflagsapi.com/png/' . $country.'&filetype';
-// https://countryflagsapi.com/png/brazil
+
 $url = 'https://countryflagsapi.com/png/' . $_REQUEST['countrycode'];
 
 $ch = curl_init();

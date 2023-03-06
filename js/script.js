@@ -136,51 +136,40 @@ $(document).ready(() => {
       },
       success: function (result) {
         console.log(result);
-
+        $("#flagImg").attr(
+          <img src="https://countryflagsapi.com/png/" />,
+          result["data"][0]["countryCode"]
+        );
         $("#country").append(result["data"][0]["countryName"]);
         $("#continent").append(result["data"][0]["continent"]);
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
-        //countryflag
-        $.ajax({
-          url: "php/countryFlag.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            countrycode: result["data"][0]["countryCode"],
-          },
-          success: function (resp) {
-            console.log(resp);
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        //display countryflag for selected country
 
         //exchange rate based on currencyCode
-        $.ajax({
-          url: "php/exchangeRate.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            currencies: result["data"][0]["currencyCode"],
-          },
-          success: function (data) {
-            console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]].code;
-            let value = data.data.data[Object.keys(data.data.data)[0]].value;
-            value = value.toFixed(2);
-            console.log(code);
-            console.log(value);
-            $("#exchangeRate").append(
-              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
-            );
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        // $.ajax({
+        //   url: "php/exchangeRate.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     currencies: result["data"][0]["currencyCode"],
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
+        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
+        //     value = value.toFixed(2);
+        //     console.log(code);
+        //     console.log(value);
+        //     $("#exchangeRate").append(
+        //       `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+        //     );
+        //   },
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     console.log(jqXHR.textStatus);
+        //   },
+        // });
         // earthquake info based on country selection
         $.ajax({
           url: "php/earthquakeInfo.php",
@@ -208,7 +197,7 @@ $(document).ready(() => {
             };
             earthquakeMarker = L.marker([lat, lng], markerOptions)
               .addTo(myMap)
-              .bindTooltip(
+              .bindPopup(
                 "<div><p><b>Earthquake Information</b><br><b>Date and Time:</b> " +
                   output.data[0].datetime +
                   "<br><b>Depth:</b> " +
@@ -217,7 +206,7 @@ $(document).ready(() => {
                   output.data[0].magnitude +
                   "</p></div>"
               )
-              .openTooltip();
+              .openPopup();
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -251,8 +240,8 @@ $(document).ready(() => {
             };
             cityMarker = L.marker([latitude, longitude], markerOptions)
               .addTo(myMap)
-              .bindTooltip("<b>Capital City: " + response.data[0].name + "</b>")
-              .openTooltip();
+              .bindPopup("<b>Capital City: " + response.data[0].name + "</b>")
+              .openPopup();
 
             //point of interest in selected country and show as cluster group on map
             $.ajax({
@@ -328,13 +317,13 @@ $(document).ready(() => {
                 " &deg;C" +
                 "<br><b>Max.Temperature<b/>:" +
                 max_temp +
-                "&deg;C" +
+                " &deg;C" +
                 "<br><b>Wind Speed</b>:" +
                 data.data.wind.speed +
-                "m/s" +
+                " m/s" +
                 "<br><b>Wind Direction<b>:" +
                 data.data.wind.deg +
-                "&deg;</p></div>"
+                " &deg;</p></div>"
             );
           },
           error: function (jqXHR, textStatus, errorThrown) {
