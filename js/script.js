@@ -30,14 +30,6 @@ $(document).ready(() => {
           `<option value="${data.data[i].properties.iso_a2}">${data.data[i].properties.name}</option>`
         );
       }
-
-      //display country flag for selected country
-      let countrycode = data.data[0].properties.iso_a2;
-      console.log(countrycode);
-      $("#flagImg").attr(
-        "src",
-        "https://countryflagsapi.com/png/" + countrycode
-      );
     },
 
     error: function (jqXHR, textStatus, errorThrown) {
@@ -92,6 +84,10 @@ $(document).ready(() => {
 
   // ploting border to selected country
   $("#select_country").change(function () {
+    $("#flagImg").attr(
+      "src",
+      "https://countryflagsapi.com/png/" + $("#select_country").val()
+    );
     $.ajax({
       url: "php/highlightCountryBorder.php",
       type: "GET",
@@ -148,28 +144,28 @@ $(document).ready(() => {
         $("#languages").append(result["data"][0]["languages"]);
 
         //exchange rate based on currencyCode
-        // $.ajax({
-        //   url: "php/exchangeRate.php",
-        //   type: "GET",
-        //   dataType: "json",
-        //   data: {
-        //     currencies: result["data"][0]["currencyCode"],
-        //   },
-        //   success: function (data) {
-        //     console.log(data);
-        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
-        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
-        //     value = value.toFixed(2);
-        //     console.log(code);
-        //     console.log(value);
-        //     $("#exchangeRate").append(
-        //       `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
-        //     );
-        //   },
-        //   error: function (jqXHR, textStatus, errorThrown) {
-        //     console.log(jqXHR.textStatus);
-        //   },
-        // });
+        $.ajax({
+          url: "php/exchangeRate.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            currencies: result["data"][0]["currencyCode"],
+          },
+          success: function (data) {
+            console.log(data);
+            let code = data.data.data[Object.keys(data.data.data)[0]].code;
+            let value = data.data.data[Object.keys(data.data.data)[0]].value;
+            value = value.toFixed(2);
+            console.log(code);
+            console.log(value);
+            $("#exchangeRate").append(
+              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+            );
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         // earthquake info based on country selection
         $.ajax({
@@ -198,7 +194,7 @@ $(document).ready(() => {
             earthquakeMarker = L.marker([lat, lng], markerOptions)
               .addTo(myMap)
               .bindPopup(
-                "<div><p><b>Earthquake Information</b><br><b>Date and Time:</b> " +
+                "<div><p><b>Earthquake Activity</b><br><b>Date and Time:</b> " +
                   output.data[0].datetime +
                   "<br><b>Depth:</b> " +
                   output.data[0].depth +
@@ -355,6 +351,7 @@ $(document).ready(() => {
           "href",
           "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
         );
+        $("#wikiModal").modal("show");
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
