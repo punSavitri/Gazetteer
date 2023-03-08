@@ -7,6 +7,7 @@ var zoomed;
 var border;
 var easyButton;
 var easyButtonWeather;
+var easyButtonOceanInfo;
 
 var bounds;
 var earthquakeMarker;
@@ -84,6 +85,16 @@ $(document).ready(() => {
 
   // ploting border to selected country
   $("#select_country").change(function () {
+    $("#select_country").append(
+      $("#select_country option")
+        .remove()
+        .sort(function (a, b) {
+          var at = $(a).text();
+          var bt = $(b).text();
+          return at > bt ? 1 : at < bt ? -1 : 0;
+        })
+    );
+
     $("#flagImg").attr(
       "src",
       "https://countryflagsapi.com/png/" + $("#select_country").val()
@@ -143,29 +154,29 @@ $(document).ready(() => {
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
 
-        //exchange rate based on currencyCode
-        $.ajax({
-          url: "php/exchangeRate.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            currencies: result["data"][0]["currencyCode"],
-          },
-          success: function (data) {
-            console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]].code;
-            let value = data.data.data[Object.keys(data.data.data)[0]].value;
-            value = value.toFixed(2);
-            console.log(code);
-            console.log(value);
-            $("#exchangeRate").append(
-              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
-            );
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        // //exchange rate based on currencyCode
+        // $.ajax({
+        //   url: "php/exchangeRate.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     currencies: result["data"][0]["currencyCode"],
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
+        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
+        //     value = value.toFixed(2);
+        //     console.log(code);
+        //     console.log(value);
+        //     $("#exchangeRate").append(
+        //       `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+        //     );
+        //   },
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     console.log(jqXHR.textStatus);
+        //   },
+        // });
 
         // earthquake info based on country selection
         $.ajax({
@@ -238,6 +249,23 @@ $(document).ready(() => {
               .addTo(myMap)
               .bindPopup("<b>Capital City: " + response.data[0].name + "</b>")
               .openPopup();
+
+            //getTimezone for given latitude and longitude
+            $.ajax({
+              url: "php/getTimeZoneInfo.php",
+              type: "GET",
+              dataType: "json",
+              data: {
+                lat: latitude, // get value from citiesInfo
+                lng: longitude, //get value from citiesInfo
+              },
+              success: function (output) {
+                console.log(output);
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.textStatus);
+              },
+            });
 
             //point of interest in selected country and show as cluster group on map
             $.ajax({
@@ -443,5 +471,13 @@ $(document).ready(() => {
 
   easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
     $("#myModal2").modal("toggle");
+  }).addTo(myMap);
+
+  easyButtonOceanInfo = L.easyButton("fa-water fa-2x", function (btn, map) {
+    $("#oceanModal").modal("show");
+  }).addTo(myMap);
+
+  timeZoneButton = L.easyButton("fa-clock-o fa-2x", function (btn, map) {
+    $("#timeZoneModal").modal("toggle");
   }).addTo(myMap);
 });

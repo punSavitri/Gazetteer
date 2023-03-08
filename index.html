@@ -221,6 +221,66 @@
       </div>
     </div>
 
+    <!-- Modal 4  for timezone at the given latitude and longitude-->
+    <div
+      class="modal fade"
+      id="timezoneModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title d-flex justify-content-center align-items-center"
+              id="modalLabel"
+            >
+              Time Zone at given Latitude and Longitude
+            </h1>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="getTimeZone">
+              <div id="country" class="text-dark align-items-center">
+                <b>Country:</b>
+              </div>
+              <div id="sunrise" class="text-dark align-items-center">
+                <b>Sunrise:</b>
+              </div>
+              <div id="sunset" class="text-dark align-items-center">
+                <b>Sunset:</b>
+              </div>
+              <div id="timezone" class="text-dark align-items-center">
+                <b>Time Zone:</b>
+              </div>
+              <div id="timenow" class="text-dark align-items-center">
+                <b>Time Now:</b>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- bootstrap js -->
     <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script
