@@ -260,11 +260,27 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
-                // $("#countryname").append(output.data.countryName);
-                // $("#sunrise").append(output.data.sunrise);
-                // $("#sunset").append(output.data.sunset);
-                // $("#timenow").append(output.data.time);
-                // $("#timezone").append(output.data.timezoneId);
+                $("#countryname").append(output.data.countryName);
+                $("#sunrise").append(output.data.sunrise);
+                $("#sunset").append(output.data.sunset);
+                $("#timenow").append(output.data.time);
+                $("#timezone").append(output.data.timezoneId);
+                // Ocean info
+                $.ajax({
+                  url: "php/oceanInfo.php",
+                  type: "GET",
+                  dataType: "json",
+                  data: {
+                    lat: output.data.lat, // get value from citiesInfo
+                    lng: output.data.lng,
+                  },
+                  success: function (output) {
+                    console.log(output);
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.textStatus);
+                  },
+                });
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
