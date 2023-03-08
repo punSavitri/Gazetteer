@@ -249,7 +249,6 @@ $(document).ready(() => {
               .addTo(myMap)
               .bindPopup("<b>Capital City: " + response.data[0].name + "</b>")
               .openPopup();
-
             //getTimezone for given latitude and longitude
             $.ajax({
               url: "php/getTimeZoneInfo.php",
@@ -261,6 +260,11 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
+                // $("#countryname").append(output.data.countryName);
+                // $("#sunrise").append(output.data.sunrise);
+                // $("#sunset").append(output.data.sunset);
+                // $("#timenow").append(output.data.time);
+                // $("#timezone").append(output.data.timezoneId);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -478,6 +482,6 @@ $(document).ready(() => {
   }).addTo(myMap);
 
   timeZoneButton = L.easyButton("fa-clock-o fa-2x", function (btn, map) {
-    $("#timeZoneModal").modal("toggle");
+    $("#timezoneModal").modal("toggle");
   }).addTo(myMap);
 });
