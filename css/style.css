@@ -14,17 +14,25 @@ html, body, #map_div {
   
 }
 a:link{
-  color:rgb(38, 158, 38);
-  text-decoration-color:hotpink ;
+  color:red;
+  text-decoration-color:underline ;
+  font-size: 16px;
+  font-family:'Courier New', Courier, monospace ;
+}
+a:visited{
+  color:green;
 }
 a:hover{
-  color:blue;
+  color:rgb(221, 9, 157);
   text-decoration: none;
-  font-size: 16px;
 }
+a:active{
+  color:blue;
+}
+
 .btn-link{
   display:inline-block;
-  padding:5px 10px;
+  padding:5px 5px;
   font-size:16px;
   cursor:pointer;
   text-align:center;

@@ -3,7 +3,7 @@ var lyrOsm;
 var layer;
 var marker;
 var circle;
-var zoomed;
+
 var border;
 var easyButton;
 var easyButtonWeather;
@@ -12,6 +12,9 @@ var easyButtonOceanInfo;
 var bounds;
 var earthquakeMarker;
 var userMarker;
+var cityMarker;
+var stamenWatercolor;
+var stamenTerrain;
 var cluster;
 
 $(document).ready(() => {
@@ -47,7 +50,7 @@ $(document).ready(() => {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   });
-  var stamenTerrain = L.tileLayer(
+  stamenTerrain = L.tileLayer(
     "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}",
     {
       attribution:
@@ -58,15 +61,15 @@ $(document).ready(() => {
       ext: "png",
     }
   );
-  var stamenTonerLite = L.tileLayer(
-    "https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}",
+  stamenWatercolor = L.tileLayer(
+    "https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}",
     {
       attribution:
         'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       subdomains: "abcd",
-      minZoom: 0,
-      maxZoom: 20,
-      ext: "png",
+      minZoom: 1,
+      maxZoom: 16,
+      ext: "jpg",
     }
   );
 
@@ -78,9 +81,14 @@ $(document).ready(() => {
   var baseMaps = {
     "Open Street Map": lyrOsm,
     "Stamen Terrain": stamenTerrain,
-    "Stamen Toner Lite": stamenTonerLite,
+    "Stamen Water Color": stamenWatercolor,
   };
-
+  // var overlayMap = {
+  //
+  //   // "Earthquake Activity": earthquakeMarker,
+  //   // "Capital City": cityMarker,
+  //   // "Point of Interest Places": marker,
+  // };
   L.control.layers(baseMaps).addTo(myMap);
 
   // ploting border to selected country
@@ -94,7 +102,7 @@ $(document).ready(() => {
           return at > bt ? 1 : at < bt ? -1 : 0;
         })
     );
-
+    //added country flag api
     $("#flagImg").attr(
       "src",
       "https://countryflagsapi.com/png/" + $("#select_country").val()
@@ -178,7 +186,7 @@ $(document).ready(() => {
         //   },
         // });
 
-        // earthquake info based on country selection
+        // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
           url: "php/earthquakeInfo.php",
           type: "GET",
@@ -214,13 +222,39 @@ $(document).ready(() => {
                   "</p></div>"
               )
               .openPopup();
+            //to find closest toponym for the lat/lng query
+            $.ajax({
+              url: "php/findNearbyToponym.php",
+              type: "GET",
+              dataType: "json",
+              data: {
+                lat: output.data[0].lat,
+                lng: output.data[0].lng,
+              },
+              success: function (result) {
+                console.log(result);
+                $("#toponymName").append(result.data.geonames[0].toponymName);
+                $("#name").append(result.data.geonames[0].name);
+                $("#toponymcountryName").append(
+                  result.data.geonames[0].countryName
+                );
+                $("#fclName").append(result.data.geonames[0].fclName);
+                $("#toponymPopulation").append(
+                  result.data.geonames[0].population
+                );
+                $("#distance").append(result.data.geonames[0].distance);
+                $("#time").append(result.data.geonames[0].timezone.timeZoneId);
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.textStatus);
+              },
+            });
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
           },
         });
-
-        //citiesInfo and set marker on cities
+        //it returns capital city information of selected country and add custom marker on map
         $.ajax({
           url: "php/citiesInfo.php",
           type: "GET",
@@ -234,6 +268,7 @@ $(document).ready(() => {
           },
           success: function (response) {
             console.log(response);
+
             var latitude = response.data[0].lat;
             var longitude = response.data[0].lng;
 
@@ -249,45 +284,8 @@ $(document).ready(() => {
               .addTo(myMap)
               .bindPopup("<b>Capital City: " + response.data[0].name + "</b>")
               .openPopup();
-            //getTimezone for given latitude and longitude
-            $.ajax({
-              url: "php/getTimeZoneInfo.php",
-              type: "GET",
-              dataType: "json",
-              data: {
-                lat: latitude, // get value from citiesInfo
-                lng: longitude, //get value from citiesInfo
-              },
-              success: function (output) {
-                console.log(output);
-                $("#countryname").append(output.data.countryName);
-                $("#sunrise").append(output.data.sunrise);
-                $("#sunset").append(output.data.sunset);
-                $("#timenow").append(output.data.time);
-                $("#timezone").append(output.data.timezoneId);
-                // Ocean info
-                $.ajax({
-                  url: "php/oceanInfo.php",
-                  type: "GET",
-                  dataType: "json",
-                  data: {
-                    lat: output.data.lat, // get value from citiesInfo
-                    lng: output.data.lng,
-                  },
-                  success: function (output) {
-                    console.log(output);
-                  },
-                  error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(jqXHR.textStatus);
-                  },
-                });
-              },
-              error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.textStatus);
-              },
-            });
 
-            //point of interest in selected country and show as cluster group on map
+            // it will returns the nearest points of interests for the given latitude/longitude at selected country and show as cluster group on map
             $.ajax({
               url: "php/pointOfInterestInfo.php",
               type: "GET",
@@ -303,10 +301,32 @@ $(document).ready(() => {
                   let longitude = output.data.poi[i].lng;
                   console.log(latitude);
                   console.log(longitude);
-                  let marker = L.marker([latitude, longitude]);
+                  marker = L.marker([latitude, longitude]);
                   cluster.addLayer(marker);
                 }
                 myMap.addLayer(cluster);
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.textStatus);
+              },
+            });
+
+            //Time zone for given latitude and longitude
+            $.ajax({
+              url: "php/getTimeZoneInfo.php",
+              type: "GET",
+              dataType: "json",
+              data: {
+                lat: latitude, // get value from citiesInfo
+                lng: longitude, //get value from citiesInfo
+              },
+              success: function (output) {
+                console.log(output);
+                $("#countryname").append(output.data.countryName);
+                $("#sunrise").append(output.data.sunrise);
+                $("#sunset").append(output.data.sunset);
+                $("#timenow").append(output.data.time);
+                $("#timezone").append(output.data.timezoneId);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -317,7 +337,8 @@ $(document).ready(() => {
             console.log(jqXHR.textStatus);
           },
         });
-        //weather information of selected country
+
+        //current weather information of selected country
         $.ajax({
           url: "php/countryWeatherInfo.php",
           type: "GET",
@@ -379,7 +400,7 @@ $(document).ready(() => {
         console.log(jqXHR.textStatus);
       },
     });
-    // wikipedia search about selected country
+    // Wikipedia Fulltext Search/returns the wikipedia entries found for the searchterm country
     $.ajax({
       url: "php/wikipediaSearch.php",
       type: "GET",
@@ -389,17 +410,18 @@ $(document).ready(() => {
       },
       success: function (response) {
         console.log(response);
-        $("#title").append(response["data"]["geonames"][0]["title"]);
-        $("#summary").append(response["data"]["geonames"][0]["summary"]);
-        $("#thumbnailImg").attr(
-          "src",
-          response["data"]["geonames"][0]["thumbnailImg"]
-        );
-        $("#wikiLink").attr(
-          "href",
-          "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
-        );
-        $("#wikiModal").modal("show");
+        for (let i = 0; i < response.data.geonames.length; i++) {
+          $("#title").append(response["data"]["geonames"][0]["title"]);
+          $("#summary").append(response["data"]["geonames"][0]["summary"]);
+          $("#thumbnailImg").attr(
+            "src",
+            response["data"]["geonames"][0]["thumbnailImg"]
+          );
+          $("#wikiLink").attr(
+            "href",
+            "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
+          );
+        }
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
@@ -407,7 +429,7 @@ $(document).ready(() => {
     });
   });
 
-  // Get User Location and country
+  // show current location of user's device and highlighting their country on map
   if (navigator.geolocation) {
     console.log("Browser support geolocation");
   }
@@ -480,24 +502,41 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
-
+  //button to show wikipedia search
   $(".btn-link").click(function () {
     $("#wikiModal").modal("show");
   });
 
-  easyButton = L.easyButton("fa-circle-info fa-2x", function (btn, map) {
-    $("#myModal").modal("toggle");
-  }).addTo(myMap);
+  //leaflet easy button
 
-  easyButtonWeather = L.easyButton("fa-cloud-sun fa-2x", function (btn, map) {
-    $("#myModal2").modal("toggle");
-  }).addTo(myMap);
+  easyButton = L.easyButton(
+    "fa-circle-info fa-2x",
+    function (btn, map) {
+      $("#myModal").modal("toggle");
+    },
+    "Country Information"
+  ).addTo(myMap);
 
-  easyButtonOceanInfo = L.easyButton("fa-water fa-2x", function (btn, map) {
-    $("#oceanModal").modal("show");
-  }).addTo(myMap);
+  easyButtonWeather = L.easyButton(
+    "fa-cloud-sun fa-2x",
+    function (btn, map) {
+      $("#myModal2").modal("toggle");
+    },
+    "Weather"
+  ).addTo(myMap);
 
-  timeZoneButton = L.easyButton("fa-clock-o fa-2x", function (btn, map) {
-    $("#timezoneModal").modal("toggle");
-  }).addTo(myMap);
+  timeZoneButton = L.easyButton(
+    "fa-clock-o fa-2x",
+    function (btn, map) {
+      $("#timezoneModal").modal("toggle");
+    },
+    "Time Zone"
+  ).addTo(myMap);
+  toponymButton = L.easyButton(
+    "fa-location-dot fa-2x",
+    function (btn, map) {
+      $("#toponymModal").modal("toggle");
+    },
+    "Nearest Place Name"
+  ).addTo(myMap);
 });

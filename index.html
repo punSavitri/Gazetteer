@@ -32,17 +32,17 @@
 
   <body>
     <nav class="navbar navbar-expand-sm">
-      <div class="container-fluid mt-2">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#"
           ><img src="images/logo.png" width="60px" alt="Gazetter Logo"
         /></a>
       </div>
-      <div class="container-fluid mt-2 mb-2">
+      <div class="container-fluid mt-1 mb-1">
         <div class="navbar-nav">
           <a class="btn-link" href="#wikiModal">Country Search on Wikipedia</a>
         </div>
       </div>
-      <div class="container-fluid mt-1 mb-2">
+      <div class="container-fluid mt-1 mb-1">
         <select
           class="form-select-sm p-2"
           aria-label="form-select-sm example"
@@ -236,7 +236,7 @@
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
-              Time Zone at given Latitude and Longitude
+              Time Zone
             </h1>
             <button
               type="button"
@@ -263,6 +263,71 @@
               </div>
               <div id="timezone" class="text-dark align-items-center">
                 <b>Time Zone:</b>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal 5 nearest toponym of given lat and lng-->
+    <div
+      class="modal fade"
+      id="toponymModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1
+              class="modal-title d-flex justify-content-center align-items-center"
+              id="modalLabel"
+            >
+              Nearest Toponym Place
+            </h1>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="toponym">
+              <div id="toponymName" class="text-dark align-items-center">
+                <b>Toponym Name:</b>
+              </div>
+              <div id="name" class="text-dark align-items-center">
+                <b>Name</b>
+              </div>
+              <div id="toponymcountryName" class="text-dark align-items-center">
+                <b>Country</b>
+              </div>
+              <div id="fclName" class="text-dark align-items-center">
+                <b>Feature Class:</b>
+              </div>
+              <div id="toponymPopulation" class="text-dark align-items-center">
+                <b>Population:</b>
+              </div>
+              <div id="distance" class="text-dark align-items-center">
+                <b>Distance:</b>
+              </div>
+              <div id="time" class="text-dark align-items-center">
+                <b>Time Zone ID:</b>
               </div>
             </div>
 
