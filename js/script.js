@@ -76,6 +76,7 @@ $(document).ready(() => {
 
   //create marker cluster group
   cluster = L.markerClusterGroup();
+  var layers = L.layerGroup([cluster, earthquakeMarker]);
 
   //leaflet layer control
   var baseMaps = {
@@ -84,7 +85,8 @@ $(document).ready(() => {
     "Stamen Water Color": stamenWatercolor,
   };
   var overlayMap = {
-    Cities: cityMarker,
+    "Marker Cluster": cluster,
+    "Earthquake Info": earthquakeMarker,
   };
   L.control.layers(baseMaps, overlayMap).addTo(myMap);
 
@@ -194,30 +196,32 @@ $(document).ready(() => {
           },
           success: function (output) {
             console.log(output);
+            for (var i = 0; i < output.data.length; i++) {
+              let lat = output.data[i].lat;
+              let lng = output.data[i].lng;
+              var iconOptions = {
+                iconUrl: "images/earthquake.png",
+                iconSize: [40, 40],
+              };
+              var customIcon = L.icon(iconOptions);
+              var markerOptions = {
+                icon: customIcon,
+              };
+              earthquakeMarker = L.marker([lat, lng], markerOptions)
+                .addTo(myMap)
+                .bindPopup(
+                  "<div><p><b>Earthquake Activity</b><br><b>Date and Time:</b> " +
+                    output.data[i].datetime +
+                    "<br><b>Depth:</b> " +
+                    output.data[i].depth +
+                    "<br><b>Magnitude:</b> " +
+                    output.data[i].magnitude +
+                    "</p></div>"
+                )
+                .openPopup();
+            }
 
-            let lat = output.data[0].lat;
-            let lng = output.data[0].lng;
-            var iconOptions = {
-              iconUrl: "images/earthquake.png",
-              iconSize: [40, 40],
-            };
-            var customIcon = L.icon(iconOptions);
-            var markerOptions = {
-              icon: customIcon,
-            };
-            earthquakeMarker = L.marker([lat, lng], markerOptions)
-              .addTo(myMap)
-              .bindPopup(
-                "<div><p><b>Earthquake Activity</b><br><b>Date and Time:</b> " +
-                  output.data[0].datetime +
-                  "<br><b>Depth:</b> " +
-                  output.data[0].depth +
-                  "<br><b>Magnitude:</b> " +
-                  output.data[0].magnitude +
-                  "</p></div>"
-              )
-              .openPopup();
-            //to find closest toponym for the lat/lng query
+            //it returns the  closest toponym places for the lat/lng query
             $.ajax({
               url: "php/findNearbyToponym.php",
               type: "GET",
