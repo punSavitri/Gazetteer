@@ -18,7 +18,7 @@ var stamenTerrain;
 var cluster;
 
 $(document).ready(() => {
-  //dropdown list of countries
+  //shows dropdown list of countries from countryBordersgeojson file
   $.ajax({
     type: "GET",
     url: "php/selectCountry.php",
@@ -44,7 +44,7 @@ $(document).ready(() => {
   // create leaflet map object
   myMap = L.map("map_div").fitWorld();
 
-  // Basemap
+  // Basemap layers
   lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution:
@@ -72,8 +72,8 @@ $(document).ready(() => {
       ext: "jpg",
     }
   );
-
   myMap.addLayer(lyrOsm);
+
   //create marker cluster group
   cluster = L.markerClusterGroup();
 
@@ -83,13 +83,10 @@ $(document).ready(() => {
     "Stamen Terrain": stamenTerrain,
     "Stamen Water Color": stamenWatercolor,
   };
-  // var overlayMap = {
-  //
-  //   // "Earthquake Activity": earthquakeMarker,
-  //   // "Capital City": cityMarker,
-  //   // "Point of Interest Places": marker,
-  // };
-  L.control.layers(baseMaps).addTo(myMap);
+  var overlayMap = {
+    Cities: cityMarker,
+  };
+  L.control.layers(baseMaps, overlayMap).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
@@ -99,7 +96,7 @@ $(document).ready(() => {
         .sort(function (a, b) {
           var at = $(a).text();
           var bt = $(b).text();
-          return at > bt ? 1 : at < bt ? -1 : 0;
+          return at < bt ? 1 : at > bt ? -1 : 0;
         })
     );
     //added country flag api
@@ -135,7 +132,6 @@ $(document).ready(() => {
             fillOpacity: 0.3,
           };
         }
-
         myMap.fitBounds(border.getBounds());
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -144,7 +140,6 @@ $(document).ready(() => {
     });
 
     //call ajax to get information about country
-
     $.ajax({
       url: "php/getCountryInfo.php",
       type: "GET",
@@ -268,22 +263,23 @@ $(document).ready(() => {
           },
           success: function (response) {
             console.log(response);
+            for (let i = 0; i < response.data.length; i++) {
+              var latitude = response.data[i].lat;
+              var longitude = response.data[i].lng;
 
-            var latitude = response.data[0].lat;
-            var longitude = response.data[0].lng;
-
-            var iconOptions = {
-              iconUrl: "images/city.png",
-              iconSize: [40, 40],
-            };
-            var customIcon = L.icon(iconOptions);
-            var markerOptions = {
-              icon: customIcon,
-            };
-            cityMarker = L.marker([latitude, longitude], markerOptions)
-              .addTo(myMap)
-              .bindPopup("<b>Capital City: " + response.data[0].name + "</b>")
-              .openPopup();
+              var iconOptions = {
+                iconUrl: "images/city.png",
+                iconSize: [35, 35],
+              };
+              var customIcon = L.icon(iconOptions);
+              var markerOptions = {
+                icon: customIcon,
+              };
+              cityMarker = L.marker([latitude, longitude], markerOptions)
+                .addTo(myMap)
+                .bindPopup("<b>This is " + response.data[i].name + " city.</b>")
+                .openPopup();
+            }
 
             // it will returns the nearest points of interests for the given latitude/longitude at selected country and show as cluster group on map
             $.ajax({
