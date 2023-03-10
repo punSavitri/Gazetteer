@@ -82,10 +82,10 @@ $(document).ready(() => {
     "Stamen Terrain": stamenTerrain,
     "Stamen Water Color": stamenWatercolor,
   };
-  var overlayMap = {
-    "Marker Cluster": cluster,
-  };
-  L.control.layers(baseMaps, overlayMap).addTo(myMap);
+  // var overlayMap = {
+  //   "Marker Cluster": cluster,
+  // };
+  L.control.layers(baseMaps).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
@@ -173,7 +173,7 @@ $(document).ready(() => {
             console.log(code);
             console.log(value);
             $("#exchangeRate").append(
-              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+              `<h6>Current Currency Exchange Rate</h6> 1USD = ${value}&nbsp;${code}`
             );
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -317,7 +317,7 @@ $(document).ready(() => {
                   marker = L.marker([latitude, longitude]);
                   cluster.addLayer(marker);
                 }
-                // myMap.addLayer(cluster);
+                myMap.addLayer(cluster);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -423,19 +423,16 @@ $(document).ready(() => {
       },
       success: function (response) {
         console.log(response);
-        for (let i = 0; i < response.data.geonames.length; i++) {
-          $("#title").append(response["data"]["geonames"][0]["title"]);
-          $("#summary").append(response["data"]["geonames"][0]["summary"]);
-          $("#thumbnailImg").attr(
-            "src",
-            response["data"]["geonames"][0]["thumbnailImg"]
-          );
-          $("#wikiLink").attr(
-            "href",
-            "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
-          );
-        }
+
+        $("#title").append(response["data"]["geonames"][0]["title"]);
+        $("#summary").append(response["data"]["geonames"][0]["summary"]);
+
+        $("#wikiLink").attr(
+          "href",
+          "https://" + response["data"]["geonames"][0]["wikipediaUrl"]
+        );
       },
+
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
       },
@@ -515,10 +512,6 @@ $(document).ready(() => {
       alert("Browser do not support geolocation.");
     }
   }
-  //button to show wikipedia search
-  $(".btn-link").click(function () {
-    $("#wikiModal").modal("show");
-  });
 
   //leaflet easy button
 
@@ -550,6 +543,20 @@ $(document).ready(() => {
     function (btn, map) {
       $("#toponymModal").modal("toggle");
     },
-    "Nearest Place Name"
+    "Toponym Place Name"
+  ).addTo(myMap);
+  wikipediaButton = L.easyButton(
+    "fa-wikipedia-w fa-1x",
+    function (btn, map) {
+      $("#wikiModal").modal("show");
+    },
+    "wikipedia Search"
+  ).addTo(myMap);
+  currencyModal = L.easyButton(
+    "fa-solid fa-dollar fa-2x ",
+    function (btn, map) {
+      $("#currencyModal").modal("show");
+    },
+    "Current Exchange Rate"
   ).addTo(myMap);
 });

@@ -38,11 +38,6 @@
         /></a>
       </div>
       <div class="container-fluid mt-1 mb-1">
-        <div class="navbar-nav">
-          <a class="btn-link" href="#wikiModal">Country Search on Wikipedia</a>
-        </div>
-      </div>
-      <div class="container-fluid mt-1 mb-1">
         <select
           class="form-select-sm p-2"
           aria-label="form-select-sm example"
@@ -67,12 +62,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1
+            <h5
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Country Information
-            </h1>
+            </h5>
             <button
               type="button"
               class="btn-close text-dark"
@@ -107,7 +102,6 @@
               <div id="languages" class="text-dark align-items-center">
                 <b>Languages:</b>
               </div>
-              <div id="exchangeRate" class="text-dark align-items-center"></div>
             </div>
 
             <div class="modal-footer">
@@ -138,12 +132,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1
+            <h5
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Weather Status
-            </h1>
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -181,12 +175,12 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h1
+            <h5
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               About Country
-            </h1>
+            </h5>
             <button
               type="button"
               class="btn-close text-dark"
@@ -198,9 +192,6 @@
             <div id="output">
               <p id="title"><b>Title:</b></p>
               <p id="summary"><b>Summary:</b></p>
-              <p>
-                <img id="thumbnailImg" width="150px" height="100px" />
-              </p>
               <p>
                 <a id="wikiLink">Click For More Information About Country</a>
               </p>
@@ -232,12 +223,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1
+            <h5
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Time Zone
-            </h1>
+            </h5>
             <button
               type="button"
               class="btn-close text-dark"
@@ -293,12 +284,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h1
+            <h5
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Nearest Toponym Place
-            </h1>
+            </h5>
             <button
               type="button"
               class="btn-close text-dark"
@@ -328,6 +319,57 @@
                 <b>Time Zone ID:</b>
               </div>
             </div>
+
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal 6 country currency conerter from selected country to any other country e.g USD -->
+    <div
+      class="modal fade"
+      id="currencyModal"
+      tabindex="-1"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              class="modal-title d-flex justify-content-center align-items-center"
+              id="modalLabel"
+            >
+              Current Exchange Rate
+            </h5>
+            <button
+              type="button"
+              class="btn-close text-dark"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="exchangeImage">
+              <img
+                src="images/exchange.png"
+                alt="Currency Exchange "
+                width="80px"
+                height="100px"
+              />
+            </div>
+            <div id="exchangeRate"><!--assign currency value from api --></div>
 
             <div class="modal-footer">
               <button

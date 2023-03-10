@@ -30,21 +30,6 @@ a:active{
   color:blue;
 }
 
-.btn-link{
-  display:inline-block;
-  padding:5px 10px;
-  font-size:16px;
-  cursor:pointer;
-  text-align:center;
-  text-decoration:none;
-  outline:none;
-  background-color:lightgreen;
-  border:none;
-  border-radius:10px;
-  box-shadow:0 7px #999;
-  font-weight: bold;
-  
-}
  .btn-link:hover{
   background-color:#3e8e41;
   color:white;
