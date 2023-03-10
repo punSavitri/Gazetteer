@@ -35,7 +35,6 @@ $(document).ready(() => {
         );
       }
     },
-
     error: function (jqXHR, textStatus, errorThrown) {
       console.log(jqXHR);
     },
@@ -44,7 +43,7 @@ $(document).ready(() => {
   // create leaflet map object
   myMap = L.map("map_div").fitWorld();
 
-  // Basemap layers
+  // Basemap layers default is open street map layer (lyrOsm)
   lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution:
@@ -76,7 +75,6 @@ $(document).ready(() => {
 
   //create marker cluster group
   cluster = L.markerClusterGroup();
-  var layers = L.layerGroup([cluster, earthquakeMarker]);
 
   //leaflet layer control
   var baseMaps = {
@@ -86,21 +84,21 @@ $(document).ready(() => {
   };
   var overlayMap = {
     "Marker Cluster": cluster,
-    "Earthquake Info": earthquakeMarker,
   };
   L.control.layers(baseMaps, overlayMap).addTo(myMap);
 
   // ploting border to selected country
   $("#select_country").change(function () {
-    $("#select_country").append(
-      $("#select_country option")
-        .remove()
-        .sort(function (a, b) {
-          var at = $(a).text();
-          var bt = $(b).text();
-          return at < bt ? 1 : at > bt ? -1 : 0;
-        })
-    );
+    var my_options = $("#select_country option");
+    var selected = $("#select_country").val();
+    my_options.sort(function (a, b) {
+      if (a.text > b.text) return 1;
+      if (a.text < b.text) return -1;
+      return 0;
+    });
+    $("#select_country").empty().append(my_options);
+    $("#select_country").val(selected);
+
     //added country flag api
     $("#flagImg").attr(
       "src",
@@ -141,7 +139,7 @@ $(document).ready(() => {
       },
     });
 
-    //call ajax to get information about country
+    //it return country information
     $.ajax({
       url: "php/getCountryInfo.php",
       type: "GET",
@@ -159,29 +157,29 @@ $(document).ready(() => {
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
 
-        // //exchange rate based on currencyCode
-        // $.ajax({
-        //   url: "php/exchangeRate.php",
-        //   type: "GET",
-        //   dataType: "json",
-        //   data: {
-        //     currencies: result["data"][0]["currencyCode"],
-        //   },
-        //   success: function (data) {
-        //     console.log(data);
-        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
-        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
-        //     value = value.toFixed(2);
-        //     console.log(code);
-        //     console.log(value);
-        //     $("#exchangeRate").append(
-        //       `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
-        //     );
-        //   },
-        //   error: function (jqXHR, textStatus, errorThrown) {
-        //     console.log(jqXHR.textStatus);
-        //   },
-        // });
+        // //return current exchange rate base currency is USD
+        $.ajax({
+          url: "php/exchangeRate.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            currencies: result["data"][0]["currencyCode"],
+          },
+          success: function (data) {
+            console.log(data);
+            let code = data.data.data[Object.keys(data.data.data)[0]].code;
+            let value = data.data.data[Object.keys(data.data.data)[0]].value;
+            value = value.toFixed(2);
+            console.log(code);
+            console.log(value);
+            $("#exchangeRate").append(
+              `<b>Current Currency Exchange Rates</b> 1 USD = ${value}&nbsp;${code}`
+            );
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
@@ -232,15 +230,30 @@ $(document).ready(() => {
               },
               success: function (result) {
                 console.log(result);
+                var lat = result.data.geonames[0].lat;
+                var lng = result.data.geonames[0].lng;
+                var iconOptions = {
+                  iconUrl: "images/placemarker.png",
+                  iconSize: [35, 40],
+                };
+                var customIcon = L.icon(iconOptions);
+                var markerOptions = {
+                  icon: customIcon,
+                };
+                var toponymMarker = L.marker([lat, lng], markerOptions)
+                  .addTo(myMap)
+                  .bindPopup(
+                    "<b>Toponyn Name:</b>" + result.data.geonames[0].toponymName
+                  )
+                  .openPopup();
+
                 $("#toponymName").append(result.data.geonames[0].toponymName);
                 $("#name").append(result.data.geonames[0].name);
                 $("#toponymcountryName").append(
                   result.data.geonames[0].countryName
                 );
                 $("#fclName").append(result.data.geonames[0].fclName);
-                $("#toponymPopulation").append(
-                  result.data.geonames[0].population
-                );
+
                 $("#distance").append(result.data.geonames[0].distance);
                 $("#time").append(result.data.geonames[0].timezone.timeZoneId);
               },
@@ -253,7 +266,7 @@ $(document).ready(() => {
             console.log(jqXHR.textStatus);
           },
         });
-        //it returns capital city information of selected country and add custom marker on map
+        //it returns cities information of selected country and added on overlay map
         $.ajax({
           url: "php/citiesInfo.php",
           type: "GET",
@@ -281,7 +294,7 @@ $(document).ready(() => {
               };
               cityMarker = L.marker([latitude, longitude], markerOptions)
                 .addTo(myMap)
-                .bindPopup("<b>This is " + response.data[i].name + " city.</b>")
+                .bindPopup("<b>City:</b>" + response.data[i].name)
                 .openPopup();
             }
 
@@ -304,7 +317,7 @@ $(document).ready(() => {
                   marker = L.marker([latitude, longitude]);
                   cluster.addLayer(marker);
                 }
-                myMap.addLayer(cluster);
+                // myMap.addLayer(cluster);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -460,8 +473,8 @@ $(document).ready(() => {
         var customIcon = L.icon(iconOptions);
         var markerOption = {
           icon: customIcon,
-          draggable: true,
         };
+
         var userMarker = L.marker([lat, lng], markerOption)
           .addTo(myMap)
           .bindTooltip("<b>You are in " + data.data.countryName + ".</b>")
