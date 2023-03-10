@@ -75,11 +75,11 @@ $(document).ready(() => {
 
   //create marker cluster group
   cluster = L.markerClusterGroup();
-  var markers = L.markerClusterGroup({
-    iconCreateFunction: function(cluster) {
-      return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
-    }
-  });
+  // var markers = L.markerClusterGroup({
+  //   iconCreateFunction: function(cluster) {
+  //     return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+  //   }
+  // });
 
   //leaflet layer control
   var baseMaps = {
@@ -320,8 +320,32 @@ $(document).ready(() => {
                   console.log(latitude);
                   console.log(longitude);
 
-                  marker = L.marker([latitude, longitude]);
-                  cluster.addLayer(marker);
+                  var iconOptions = {
+                    iconUrl: "images/location.png",
+                    iconSize: [35, 35],
+                  };
+                  var customIcon = L.icon(iconOptions);
+                  var markerOption = {
+                    icon: customIcon,
+                  };
+                  var markerOne = L.marker([latitude, longitude], markerOption)
+                    .addTo(myMap)
+                    .bindPopup(output.data.poi[i].name);
+
+                  var iconOptions = {
+                    iconUrl: "images/orange.png",
+                    iconSize: [35, 35],
+                  };
+                  var customIcon = L.icon(iconOptions);
+                  var markerOption = {
+                    icon: customIcon,
+                  };
+
+                  var markerTwo = L.marker([latitude, longitude], markerOption)
+                    .addTo(myMap)
+                    .bindPopup(output.data.poi[i].typeClass);
+
+                  cluster.addLayer(markerOne, markerTwo);
                 }
                 myMap.addLayer(cluster);
               },

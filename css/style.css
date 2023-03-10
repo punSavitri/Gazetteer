@@ -65,3 +65,10 @@ select option{
   margin:auto;
   padding: 5px 5px;
 }
+.marker-cluster-small {
+  background-color: #49afa5 !important;
+}
+.marker-cluster-small div {
+  background-color: #1c9489 !important;
+  color:#fff !important;
+}
