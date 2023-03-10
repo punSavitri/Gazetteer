@@ -337,11 +337,11 @@ $(document).ready(() => {
                     iconSize: [35, 35],
                   };
                   var customIcon = L.icon(iconOptions);
-                  var markerOption = {
+                  var markerOptions = {
                     icon: customIcon,
                   };
 
-                  var markerTwo = L.marker([latitude, longitude], markerOption)
+                  var markerTwo = L.marker([latitude, longitude], markerOptions)
                     .addTo(myMap)
                     .bindPopup(output.data.poi[i].typeClass);
 
