@@ -3,7 +3,7 @@ var lyrOsm;
 var layer;
 var cluster;
 var circle;
-var marker;
+var markers;
 
 var border;
 var easyButton;
@@ -73,14 +73,6 @@ $(document).ready(() => {
   );
   myMap.addLayer(lyrOsm);
 
-  //create marker cluster group
-  cluster = L.markerClusterGroup();
-  // var markers = L.markerClusterGroup({
-  //   iconCreateFunction: function(cluster) {
-  //     return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
-  //   }
-  // });
-
   //leaflet layer control
   var baseMaps = {
     "Open Street Map": lyrOsm,
@@ -91,8 +83,10 @@ $(document).ready(() => {
   //   "Marker Cluster": cluster,
   // };
   L.control.layers(baseMaps).addTo(myMap);
+  //marker cluster
+  markers = L.markerClusterGroup();
 
-  // ploting border to selected country
+  // sorting country name in alphabetical order
   $("#select_country").change(function () {
     var my_options = $("#select_country option");
     var selected = $("#select_country").val();
@@ -109,6 +103,7 @@ $(document).ready(() => {
       "src",
       "https://countryflagsapi.com/png/" + $("#select_country").val()
     );
+    //plotting border for selected country
     $.ajax({
       url: "php/highlightCountryBorder.php",
       type: "GET",
@@ -163,28 +158,28 @@ $(document).ready(() => {
         $("#languages").append(result["data"][0]["languages"]);
 
         //return current exchange rate base currency is USD
-        $.ajax({
-          url: "php/exchangeRate.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            currencies: result["data"][0]["currencyCode"],
-          },
-          success: function (data) {
-            console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]].code;
-            let value = data.data.data[Object.keys(data.data.data)[0]].value;
-            value = value.toFixed(2);
-            console.log(code);
-            console.log(value);
-            $("#exchangeRate").append(
-              `<h6>Current Currency Exchange Rate</h6> 1USD = ${value}&nbsp;${code}`
-            );
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        // $.ajax({
+        //   url: "php/exchangeRate.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     currencies: result["data"][0]["currencyCode"],
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
+        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
+        //     value = value.toFixed(2);
+        //     console.log(code);
+        //     console.log(value);
+        //     $("#exchangeRate").append(
+        //       `<h6>Current Currency Exchange Rate</h6> 1USD = ${value}&nbsp;${code}`
+        //     );
+        //   },
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     console.log(jqXHR.textStatus);
+        //   },
+        // });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
@@ -314,40 +309,34 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
+
                 for (let i = 0; i < output.data.poi.length; i++) {
                   let latitude = output.data.poi[i].lat;
                   let longitude = output.data.poi[i].lng;
                   console.log(latitude);
                   console.log(longitude);
 
-                  var iconOptions = {
-                    iconUrl: "images/location.png",
-                    iconSize: [35, 35],
-                  };
-                  var customIcon = L.icon(iconOptions);
-                  var markerOption = {
-                    icon: customIcon,
-                  };
-                  var markerOne = L.marker([latitude, longitude], markerOption)
-                    .addTo(myMap)
-                    .bindPopup(output.data.poi[i].name);
-
-                  var iconOptions = {
+                  var orangeIcon = L.icon({
                     iconUrl: "images/orange.png",
                     iconSize: [35, 35],
-                  };
-                  var customIcon = L.icon(iconOptions);
-                  var markerOptions = {
-                    icon: customIcon,
-                  };
-
-                  var markerTwo = L.marker([latitude, longitude], markerOptions)
+                  });
+                  //marker one
+                  var marker1 = L.marker([latitude, longitude], {
+                    icon: orangeIcon,
+                  })
+                    .addTo(myMap)
+                    .bindPopup(output.data.poi[i].name);
+                  //marker 2
+                  var marker2 = L.marker([latitude, longitude])
                     .addTo(myMap)
                     .bindPopup(output.data.poi[i].typeClass);
 
-                  cluster.addLayer(markerOne, markerTwo);
+                  markers.addLayer(marker1, marker2);
                 }
-                myMap.addLayer(cluster);
+                if (markers) {
+                  myMap.clearLayers(markers);
+                }
+                myMap.addLayer(markers);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
