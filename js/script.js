@@ -3,7 +3,6 @@ var lyrOsm;
 var layer;
 var cluster;
 var circle;
-var markers;
 
 var border;
 var easyButton;
@@ -11,9 +10,11 @@ var easyButtonWeather;
 var easyButtonOceanInfo;
 
 var bounds;
-var earthquakeMarker;
+var earthquakeMarkers;
+var toponymMarkers;
+var cityMarkers;
+var markers;
 var userMarker;
-var cityMarker;
 var stamenWatercolor;
 var stamenTerrain;
 
@@ -84,6 +85,9 @@ $(document).ready(() => {
   // };
   L.control.layers(baseMaps).addTo(myMap);
   //marker cluster
+  earthquakeMarkers = L.markerClusterGroup();
+  toponymMarkers = L.markerClusterGroup();
+  cityMarkers = L.markerClusterGroup();
   markers = L.markerClusterGroup();
 
   // sorting country name in alphabetical order
@@ -205,8 +209,8 @@ $(document).ready(() => {
               var markerOptions = {
                 icon: customIcon,
               };
-              earthquakeMarker = L.marker([lat, lng], markerOptions)
-                .addTo(myMap)
+              var earthquakeMarker = L.marker([lat, lng], markerOptions)
+
                 .bindPopup(
                   "<div><p><b>Earthquake Activity</b><br><b>Date and Time:</b> " +
                     output.data[i].datetime +
@@ -217,7 +221,9 @@ $(document).ready(() => {
                     "</p></div>"
                 )
                 .openPopup();
+              earthquakeMarkers.addLayer(earthquakeMarker);
             }
+            myMap.addLayer(earthquakeMarkers);
 
             //it returns the  closest toponym places for the lat/lng query
             $.ajax({
@@ -230,32 +236,40 @@ $(document).ready(() => {
               },
               success: function (result) {
                 console.log(result);
-                var lat = result.data.geonames[0].lat;
-                var lng = result.data.geonames[0].lng;
-                var iconOptions = {
-                  iconUrl: "images/placemarker.png",
-                  iconSize: [35, 40],
-                };
-                var customIcon = L.icon(iconOptions);
-                var markerOptions = {
-                  icon: customIcon,
-                };
-                var toponymMarker = L.marker([lat, lng], markerOptions)
-                  .addTo(myMap)
-                  .bindPopup(
-                    "<b>Toponyn Name:</b>" + result.data.geonames[0].toponymName
-                  )
-                  .openPopup();
 
-                $("#toponymName").append(result.data.geonames[0].toponymName);
-                $("#name").append(result.data.geonames[0].name);
-                $("#toponymcountryName").append(
-                  result.data.geonames[0].countryName
-                );
-                $("#fclName").append(result.data.geonames[0].fclName);
+                for (let i = 0; i < result.data.geonames.length; i++) {
+                  var lat = result.data.geonames[i].lat;
+                  var lng = result.data.geonames[i].lng;
+                  var iconOptions = {
+                    iconUrl: "images/placemarker.png",
+                    iconSize: [35, 40],
+                  };
+                  var customIcon = L.icon(iconOptions);
+                  var markerOptions = {
+                    icon: customIcon,
+                  };
+                  var toponymMarker = L.marker([lat, lng], markerOptions)
 
-                $("#distance").append(result.data.geonames[0].distance);
-                $("#time").append(result.data.geonames[0].timezone.timeZoneId);
+                    .bindPopup(
+                      "<b>Toponyn Name:</b>" +
+                        result.data.geonames[i].toponymName
+                    )
+                    .openPopup();
+
+                  $("#toponymName").append(result.data.geonames[i].toponymName);
+                  $("#name").append(result.data.geonames[i].name);
+                  $("#toponymcountryName").append(
+                    result.data.geonames[i].countryName
+                  );
+                  $("#fclName").append(result.data.geonames[i].fclName);
+
+                  $("#distance").append(result.data.geonames[i].distance);
+                  $("#time").append(
+                    result.data.geonames[i].timezone.timeZoneId
+                  );
+                  toponymMarkers.addLayer(toponymMarker);
+                }
+                myMap.addLayer(toponymMarkers);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -292,11 +306,23 @@ $(document).ready(() => {
               var markerOptions = {
                 icon: customIcon,
               };
-              cityMarker = L.marker([latitude, longitude], markerOptions)
-                .addTo(myMap)
-                .bindPopup("<b>City:</b>" + response.data[i].name)
+              var cityMarker = L.marker([latitude, longitude], markerOptions)
+
+                .bindPopup(
+                  "<div><b>City:</b>" +
+                    response.data[i].name +
+                    "<br><b>Population:</b>" +
+                    response.data[i].population +
+                    "<br><b>Wikipedia Link:</b>" +
+                    "https://" +
+                    response.data[i].wikipedia +
+                    "</div>"
+                )
                 .openPopup();
+
+              cityMarkers.addLayer(cityMarker);
             }
+            myMap.addLayer(cityMarkers);
 
             // it will returns the nearest points of interests for the given latitude/longitude at selected country and show as cluster group on map
             $.ajax({
@@ -323,19 +349,14 @@ $(document).ready(() => {
                   //marker one
                   var marker1 = L.marker([latitude, longitude], {
                     icon: orangeIcon,
-                  })
-                    .addTo(myMap)
-                    .bindPopup(output.data.poi[i].name);
+                  }).bindPopup(output.data.poi[i].name);
                   //marker 2
-                  var marker2 = L.marker([latitude, longitude])
-                    .addTo(myMap)
-                    .bindPopup(output.data.poi[i].typeClass);
+                  var marker2 = L.marker([latitude, longitude]).bindPopup(
+                    output.data.poi[i].typeClass
+                  );
+                  markers.addLayers([marker1, marker2]);
+                }
 
-                  markers.addLayer(marker1, marker2);
-                }
-                if (markers) {
-                  myMap.clearLayers(markers);
-                }
                 myMap.addLayer(markers);
               },
               error: function (jqXHR, textStatus, errorThrown) {
