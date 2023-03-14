@@ -95,7 +95,6 @@ $(document).ready(() => {
 
   // sorting country name in alphabetical order
   $("#select_country").change(function () {
-    
     if (clusterMarkers) {
       clusterMarkers.clearLayers();
     }
@@ -372,6 +371,7 @@ $(document).ready(() => {
                   var marker2 = L.marker([latitude, longitude]).bindPopup(
                     output.data.poi[i].typeClass
                   );
+
                   markers.addLayers([marker1, marker2]);
                 }
 
@@ -494,6 +494,10 @@ $(document).ready(() => {
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
       },
+
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR.textStatus);
+      },
     });
   });
 
@@ -532,7 +536,7 @@ $(document).ready(() => {
         };
 
         var userMarker = L.marker([lat, lng], markerOption)
-          // .addTo(myMap)
+
           .bindTooltip("<b>You are in " + data.data.countryName + ".</b>")
           .openTooltip();
         circle = L.circle([lat, lng], {
@@ -545,6 +549,8 @@ $(document).ready(() => {
           fillColor: "yellow",
           fillOpacity: 0.2,
         }).addTo(myMap);
+        clusterMarkers.addLayer(userMarker);
+        myMap.addLayer(clusterMarkers);
 
         var lc = L.control
           .locate({
