@@ -86,12 +86,8 @@ $(document).ready(() => {
   // };
   L.control.layers(baseMaps).addTo(myMap);
 
-  //all marker stored in clusterMarkers
+  //all markers stored in clusterMarkers
   clusterMarkers = L.markerClusterGroup();
-  // earthquakeMarkers = L.markerClusterGroup();
-  // toponymMarkers = L.markerClusterGroup();
-  // cityMarkers = L.markerClusterGroup();
-  // markers = L.markerClusterGroup();
 
   // sorting country name in alphabetical order
   $("#select_country").change(function () {
@@ -109,10 +105,10 @@ $(document).ready(() => {
     $("#select_country").val(selected);
 
     //added country flag api
-    $("#flagImg").attr(
-      "src",
-      "https://countryflagsapi.com/png/" + $("#select_country").val()
-    );
+    // $("#flagImg").attr(
+    //   "src",
+    //   "https://countryflagsapi.com/png/" + $("#select_country").val()
+    // );
     //plotting border for selected country
     $.ajax({
       url: "php/highlightCountryBorder.php",
@@ -160,12 +156,28 @@ $(document).ready(() => {
       },
       success: function (result) {
         console.log(result);
-
         $("#country").append(result["data"][0]["countryName"]);
         $("#continent").append(result["data"][0]["continent"]);
         $("#capital").append(result["data"][0]["capital"]);
         $("#population").append(result["data"][0]["population"]);
         $("#languages").append(result["data"][0]["languages"]);
+
+        //added country flag
+        $.ajax({
+          url: "php/countryFlag.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            country_code: result["data"][0]["countryCode"],
+          },
+          success: function (output) {
+            console.log(output);
+            $("#flagImg").attr("src", output.data[0].flags.png);
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         //return current exchange rate base currency is USD
         // $.ajax({
