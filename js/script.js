@@ -8,6 +8,7 @@ var border;
 var easyButton;
 var easyButtonWeather;
 var easyButtonOceanInfo;
+var clusterMarkers;
 
 var bounds;
 var earthquakeMarkers;
@@ -84,14 +85,20 @@ $(document).ready(() => {
   //   "Marker Cluster": cluster,
   // };
   L.control.layers(baseMaps).addTo(myMap);
-  //marker cluster
-  earthquakeMarkers = L.markerClusterGroup();
-  toponymMarkers = L.markerClusterGroup();
-  cityMarkers = L.markerClusterGroup();
-  markers = L.markerClusterGroup();
+
+  //all marker stored in clusterMarkers
+  clusterMarkers = L.markerClusterGroup();
+  // earthquakeMarkers = L.markerClusterGroup();
+  // toponymMarkers = L.markerClusterGroup();
+  // cityMarkers = L.markerClusterGroup();
+  // markers = L.markerClusterGroup();
 
   // sorting country name in alphabetical order
   $("#select_country").change(function () {
+    
+    if (clusterMarkers) {
+      clusterMarkers.clearLayers();
+    }
     var my_options = $("#select_country option");
     var selected = $("#select_country").val();
     my_options.sort(function (a, b) {
@@ -198,9 +205,7 @@ $(document).ready(() => {
           },
           success: function (output) {
             console.log(output);
-            if (earthquakeMarkers) {
-              earthquakeMarkers.clearLayers();
-            }
+
             for (var i = 0; i < output.data.length; i++) {
               let lat = output.data[i].lat;
               let lng = output.data[i].lng;
@@ -224,9 +229,9 @@ $(document).ready(() => {
                     "</p></div>"
                 )
                 .openPopup();
-              earthquakeMarkers.addLayer(earthquakeMarker);
+              clusterMarkers.addLayer(earthquakeMarker);
             }
-            myMap.addLayer(earthquakeMarkers);
+            myMap.addLayer(clusterMarkers);
 
             //it returns the  closest toponym places for the lat/lng query
             $.ajax({
@@ -239,9 +244,6 @@ $(document).ready(() => {
               },
               success: function (result) {
                 console.log(result);
-                if (toponymMarkers) {
-                  toponymMarkers.clearLayers();
-                }
 
                 for (let i = 0; i < result.data.geonames.length; i++) {
                   var lat = result.data.geonames[i].lat;
@@ -271,7 +273,7 @@ $(document).ready(() => {
                         "</div>"
                     )
                     .openPopup();
-                  toponymMarkers.addLayer(toponymMarker);
+                  clusterMarkers.addLayer(toponymMarker);
                   //toponymModal
                   $("#toponymName").append(result.data.geonames[i].toponymName);
                   $("#name").append(result.data.geonames[i].name);
@@ -284,7 +286,7 @@ $(document).ready(() => {
                     result.data.geonames[i].timezone.timeZoneId
                   );
                 }
-                myMap.addLayer(toponymMarkers);
+                myMap.addLayer(clusterMarkers);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -309,9 +311,7 @@ $(document).ready(() => {
           },
           success: function (response) {
             console.log(response);
-            if (cityMarkers) {
-              cityMarkers.clearLayers();
-            }
+
             for (let i = 0; i < response.data.length; i++) {
               var latitude = response.data[i].lat;
               var longitude = response.data[i].lng;
@@ -338,9 +338,9 @@ $(document).ready(() => {
                 )
                 .openPopup();
 
-              cityMarkers.addLayer(cityMarker);
+              clusterMarkers.addLayer(cityMarker);
             }
-            myMap.addLayer(cityMarkers);
+            myMap.addLayer(clusterMarkers);
 
             // it will returns the nearest points of interests for the given latitude/longitude at selected country and show as cluster group on map
             $.ajax({
@@ -353,9 +353,6 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
-                if (markers) {
-                  markers.clearLayers();
-                }
 
                 for (let i = 0; i < output.data.poi.length; i++) {
                   let latitude = output.data.poi[i].lat;
@@ -518,9 +515,6 @@ $(document).ready(() => {
       },
       success: function (data) {
         console.log(data);
-        if (userMarker) {
-          userMarker.clearLayers();
-        }
 
         $("#select_country").val(data.data.countryCode).change();
 
@@ -538,7 +532,7 @@ $(document).ready(() => {
         };
 
         var userMarker = L.marker([lat, lng], markerOption)
-          .addTo(myMap)
+          // .addTo(myMap)
           .bindTooltip("<b>You are in " + data.data.countryName + ".</b>")
           .openTooltip();
         circle = L.circle([lat, lng], {
