@@ -198,6 +198,9 @@ $(document).ready(() => {
           },
           success: function (output) {
             console.log(output);
+            if (earthquakeMarkers) {
+              earthquakeMarkers.clearLayers();
+            }
             for (var i = 0; i < output.data.length; i++) {
               let lat = output.data[i].lat;
               let lng = output.data[i].lng;
@@ -236,6 +239,9 @@ $(document).ready(() => {
               },
               success: function (result) {
                 console.log(result);
+                if (toponymMarkers) {
+                  toponymMarkers.clearLayers();
+                }
 
                 for (let i = 0; i < result.data.geonames.length; i++) {
                   var lat = result.data.geonames[i].lat;
@@ -249,25 +255,34 @@ $(document).ready(() => {
                     icon: customIcon,
                   };
                   var toponymMarker = L.marker([lat, lng], markerOptions)
-
                     .bindPopup(
-                      "<b>Toponyn Name:</b>" +
-                        result.data.geonames[i].toponymName
+                      "<div><b style='color:red;'>Toponyn Name:</b>" +
+                        result.data.geonames[i].toponymName +
+                        "<br><b style='color:red;'>Name:</b>" +
+                        result.data.geonames[i].name +
+                        "<br><b style='color:red;'>Country:</b>" +
+                        result.data.geonames[i].countryName +
+                        "<br><b style='color:red;'>Feature Class Name:</b>" +
+                        result.data.geonames[i].fclName +
+                        "<br><b style='color:red;'>Distance:</b>" +
+                        result.data.geonames[i].distance +
+                        "<br><b style='color:red;'>Time Zone:</b>" +
+                        result.data.geonames[i].timezone.timeZoneId +
+                        "</div>"
                     )
                     .openPopup();
-
+                  toponymMarkers.addLayer(toponymMarker);
+                  //toponymModal
                   $("#toponymName").append(result.data.geonames[i].toponymName);
                   $("#name").append(result.data.geonames[i].name);
                   $("#toponymcountryName").append(
                     result.data.geonames[i].countryName
                   );
                   $("#fclName").append(result.data.geonames[i].fclName);
-
                   $("#distance").append(result.data.geonames[i].distance);
                   $("#time").append(
                     result.data.geonames[i].timezone.timeZoneId
                   );
-                  toponymMarkers.addLayer(toponymMarker);
                 }
                 myMap.addLayer(toponymMarkers);
               },
@@ -294,6 +309,9 @@ $(document).ready(() => {
           },
           success: function (response) {
             console.log(response);
+            if (cityMarkers) {
+              cityMarkers.clearLayers();
+            }
             for (let i = 0; i < response.data.length; i++) {
               var latitude = response.data[i].lat;
               var longitude = response.data[i].lng;
@@ -335,6 +353,9 @@ $(document).ready(() => {
               },
               success: function (output) {
                 console.log(output);
+                if (markers) {
+                  markers.clearLayers();
+                }
 
                 for (let i = 0; i < output.data.poi.length; i++) {
                   let latitude = output.data.poi[i].lat;
@@ -497,6 +518,10 @@ $(document).ready(() => {
       },
       success: function (data) {
         console.log(data);
+        if (userMarker) {
+          userMarker.clearLayers();
+        }
+
         $("#select_country").val(data.data.countryCode).change();
 
         lat = position.coords.latitude;
