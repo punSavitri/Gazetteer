@@ -9,11 +9,13 @@ var easyButton;
 var easyButtonWeather;
 var easyButtonOceanInfo;
 var clusterMarkers;
+var control;
 
 var bounds;
 var earthquakeMarkers;
 var toponymMarkers;
 var cityMarkers;
+var cityMarker;
 var markers;
 var userMarker;
 var stamenWatercolor;
@@ -81,9 +83,7 @@ $(document).ready(() => {
     "Stamen Terrain": stamenTerrain,
     "Stamen Water Color": stamenWatercolor,
   };
-  // var overlayMap = {
-  //   "Marker Cluster": cluster,
-  // };
+
   L.control.layers(baseMaps).addTo(myMap);
 
   //all markers stored in clusterMarkers
@@ -91,6 +91,7 @@ $(document).ready(() => {
 
   // sorting country name in alphabetical order
   $("#select_country").change(function () {
+    //remove markercluseter
     if (clusterMarkers) {
       clusterMarkers.clearLayers();
     }
@@ -104,11 +105,6 @@ $(document).ready(() => {
     $("#select_country").empty().append(my_options);
     $("#select_country").val(selected);
 
-    //added country flag api
-    // $("#flagImg").attr(
-    //   "src",
-    //   "https://countryflagsapi.com/png/" + $("#select_country").val()
-    // );
     //plotting border for selected country
     $.ajax({
       url: "php/highlightCountryBorder.php",
@@ -195,7 +191,7 @@ $(document).ready(() => {
             console.log(code);
             console.log(value);
             $("#exchangeRate").append(
-              `<h6>Current Currency Exchange Rate</h6> 1USD = ${value}&nbsp;${code}`
+              `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
             );
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -343,7 +339,6 @@ $(document).ready(() => {
                     "<br><b>Population:</b>" +
                     response.data[i].population +
                     "<br><b>Wikipedia Link:</b>" +
-                    "https://" +
                     response.data[i].wikipedia +
                     "</div>"
                 )
