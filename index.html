@@ -31,27 +31,9 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#"
-          ><img
-            src="images/logo.png"
-            width="100px"
-            height="100px"
-            alt="Gazetter Logo"
-        /></a>
-      </div>
-      <div class="container-fluid mt-1 mb-1">
-        <select
-          class="form-select-sm p-2"
-          aria-label="form-select-sm example"
-          id="select_country"
-          name="select_country"
-        >
-          <option>Please Select Country..</option>
-        </select>
-      </div>
-    </nav>
+    <span id="selectContainer">
+      <select id="select_country" class="form-select shadow-sm"></select>
+    </span>
 
     <div id="map_div"></div>
 
@@ -81,6 +63,8 @@
           </div>
           <div class="modal-body">
             <div id="country_info">
+              <!-- table -->
+
               <div id="flag">
                 <img id="flagImg" width="100px" height="100px" />
               </div>
@@ -144,7 +128,35 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div id="weather_info"><!--assign data from API--></div>
+            <div id="weather_info">
+              <!--assign data from API-->
+              <table class="table">
+                <tr>
+                  <th>City</th>
+                  <td id="city"></td>
+                </tr>
+                <tr>
+                  <th>Country</th>
+                  <td id="countryWeather"></td>
+                </tr>
+                <tr>
+                  <th>Weather</th>
+                  <td id="weather"></td>
+                </tr>
+                <tr>
+                  <th>Observation</th>
+                  <td id="weatherobservation"></td>
+                </tr>
+                <tr>
+                  <th>Temperature</th>
+                  <td id="temperature"></td>
+                </tr>
+                <tr>
+                  <th>Humidity</th>
+                  <td id="humidity"></td>
+                </tr>
+              </table>
+            </div>
             <div class="modal-footer">
               <button
                 type="button"
@@ -236,23 +248,41 @@
           </div>
           <div class="modal-body">
             <div id="getTimeZone">
-              <div id="countryname" class="text-dark align-items-center">
-                <b>Country:</b>
-              </div>
-              <div id="sunrise" class="text-dark align-items-center">
-                <b>Sunrise</b
-                ><img src="images/sunrise.png" width="50px" height="60px" />
-              </div>
-              <div id="sunset" class="text-dark align-items-center">
-                <b>Sunset</b
-                ><img src="images/sunset.png" width="50px" height="50px" />
-              </div>
-              <div id="timenow" class="text-dark align-items-center">
-                <b>Time Now:</b>
-              </div>
-              <div id="timezone" class="text-dark align-items-center">
-                <b>Time Zone:</b>
-              </div>
+              <!--assign data from API-->
+              <table class="table">
+                <tr>
+                  <th>Country</th>
+                  <td id="countryname"></td>
+                </tr>
+                <tr>
+                  <th>
+                    Sunrise<img
+                      src="images/sunrise.png"
+                      width="30px"
+                      height="30px"
+                    />
+                  </th>
+                  <td id="sunrise"></td>
+                </tr>
+                <tr>
+                  <th>
+                    Sunset<img
+                      src="images/sunset.png"
+                      width="30px"
+                      height="30px"
+                    />
+                  </th>
+                  <td id="sunset"></td>
+                </tr>
+                <tr>
+                  <th>Time Now</th>
+                  <td id="timenow"></td>
+                </tr>
+                <tr>
+                  <th>Time Zone</th>
+                  <td id="timezone"></td>
+                </tr>
+              </table>
             </div>
 
             <div class="modal-footer">
@@ -297,7 +327,37 @@
           </div>
           <div class="modal-body">
             <div id="toponym">
-              <div id="toponymName" class="text-dark align-items-center">
+              <!--assign data from API-->
+              <table class="table">
+                <tr>
+                  <th>Toponym Name</th>
+                  <td id="toponymName"></td>
+                </tr>
+                <tr>
+                  <th>Name</th>
+                  <td id="name"></td>
+                </tr>
+                <tr>
+                  <th>Country</th>
+                  <td id="toponymcountryName"></td>
+                </tr>
+                <tr>
+                  <th>Feature Class</th>
+                  <td id="fclName"></td>
+                </tr>
+                <tr>
+                  <th>Distance</th>
+                  <td id="distance"></td>
+                </tr>
+                <tr>
+                  <th>Time Zone Id</th>
+                  <td id="time"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- <div id="toponymName" class="text-dark align-items-center">
                 <b>Toponym Name:</b>
               </div>
               <div id="name" class="text-dark align-items-center">
@@ -316,24 +376,22 @@
               <div id="time" class="text-dark align-items-center">
                 <b>Time Zone ID:</b>
               </div>
-            </div>
+            </div> -->
 
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
-            </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
     </div>
+
     <!-- Modal 6 country currency conerter from selected country to any other country e.g USD -->
     <div
       class="modal fade"

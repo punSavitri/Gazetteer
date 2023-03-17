@@ -15,7 +15,8 @@ var bounds;
 var earthquakeMarkers;
 var toponymMarkers;
 var cityMarkers;
-var cityMarker;
+var cities;
+var cityIcon;
 var markers;
 var userMarker;
 var stamenWatercolor;
@@ -45,46 +46,56 @@ $(document).ready(() => {
   });
 
   // create leaflet map object
-  myMap = L.map("map_div").fitWorld();
-
-  // Basemap layers default is open street map layer (lyrOsm)
-  lyrOsm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  });
-  stamenTerrain = L.tileLayer(
-    "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}",
+  var streets = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
     {
       attribution:
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      subdomains: "abcd",
-      minZoom: 0,
-      maxZoom: 18,
-      ext: "png",
+        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
     }
   );
-  stamenWatercolor = L.tileLayer(
-    "https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}",
+  var satellite = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     {
       attribution:
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      subdomains: "abcd",
-      minZoom: 1,
-      maxZoom: 16,
-      ext: "jpg",
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
     }
   );
-  myMap.addLayer(lyrOsm);
+  //basemaps
+  var basemaps = {
+    Streets: streets,
+    Satellite: satellite,
+  };
+  //declare myMap object
+  myMap = L.map("map_div", {
+    layers: [streets],
+  }).setView([54.5, -4], 6);
 
-  //leaflet layer control
-  var baseMaps = {
-    "Open Street Map": lyrOsm,
-    "Stamen Terrain": stamenTerrain,
-    "Stamen Water Color": stamenWatercolor,
+  //cities cluster marker
+
+  cities = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#fff",
+      color: "#000",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5,
+    },
+  }).addTo(myMap);
+
+  var overlays = {
+    Cities: cities,
   };
 
-  L.control.layers(baseMaps).addTo(myMap);
+  var layerControl = L.control.layers(basemaps, overlays).addTo(myMap);
+
+  cityIcon = L.ExtraMarkers.icon({
+    icon: "fa-city",
+    markerColor: "green",
+    shape: "square",
+    prefix: "fa",
+  });
+
+  //
 
   //all markers stored in clusterMarkers
   clusterMarkers = L.markerClusterGroup();
@@ -176,28 +187,28 @@ $(document).ready(() => {
         });
 
         //return current exchange rate base currency is USD
-        $.ajax({
-          url: "php/exchangeRate.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            currencies: result["data"][0]["currencyCode"],
-          },
-          success: function (data) {
-            console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]].code;
-            let value = data.data.data[Object.keys(data.data.data)[0]].value;
-            value = value.toFixed(2);
-            console.log(code);
-            console.log(value);
-            $("#exchangeRate").append(
-              `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
-            );
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        // $.ajax({
+        //   url: "php/exchangeRate.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     currencies: result["data"][0]["currencyCode"],
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
+        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
+        //     value = value.toFixed(2);
+        //     console.log(code);
+        //     console.log(value);
+        //     $("#exchangeRate").append(
+        //       `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
+        //     );
+        //   },
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     console.log(jqXHR.textStatus);
+        //   },
+        // });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
@@ -323,30 +334,13 @@ $(document).ready(() => {
               var latitude = response.data[i].lat;
               var longitude = response.data[i].lng;
 
-              var iconOptions = {
-                iconUrl: "images/city.png",
-                iconSize: [35, 35],
-              };
-              var customIcon = L.icon(iconOptions);
-              var markerOptions = {
-                icon: customIcon,
-              };
-              var cityMarker = L.marker([latitude, longitude], markerOptions)
-
-                .bindPopup(
-                  "<div><b>City:</b>" +
-                    response.data[i].name +
-                    "<br><b>Population:</b>" +
-                    response.data[i].population +
-                    "<br><b>Wikipedia Link:</b>" +
-                    response.data[i].wikipedia +
-                    "</div>"
-                )
-                .openPopup();
-
-              clusterMarkers.addLayer(cityMarker);
+              L.marker([latitude, longitude], { icon: cityIcon })
+                .bindTooltip(response.data[i].name, {
+                  direction: "top",
+                  sticky: true,
+                })
+                .addTo(cities);
             }
-            myMap.addLayer(clusterMarkers);
 
             // it will returns the nearest points of interests for the given latitude/longitude at selected country and show as cluster group on map
             $.ajax({
@@ -435,39 +429,12 @@ $(document).ready(() => {
             let max_temp = data.data.main.temp_max;
             max_temp = Math.floor(max_temp);
 
-            $("#weather_info").append(
-              "<div><p><b>City</b>:" +
-                data.data.name +
-                "," +
-                data.data.sys.country +
-                "<br><b>Weather</b>:" +
-                data.data.weather[0].main +
-                "<br><b>Weather Description</b>:<img src='http://openweathermap.org/img/w/" +
-                data.data.weather[0].icon +
-                ".png'>" +
-                data.data.weather[0].description +
-                "<br><b>Temperature</b>:" +
-                +temp +
-                "&deg;C" +
-                "<br><b>Pressure</b>:" +
-                data.data.main.pressure +
-                "hPa" +
-                "<br><b>Humidity</b>:" +
-                data.data.main.humidity +
-                "&#37;" +
-                "<br><b>Min.Temperature</b>:" +
-                min_temp +
-                " &deg;C" +
-                "<br><b>Max.Temperature<b/>:" +
-                max_temp +
-                " &deg;C" +
-                "<br><b>Wind Speed</b>:" +
-                data.data.wind.speed +
-                " m/s" +
-                "<br><b>Wind Direction<b>:" +
-                data.data.wind.deg +
-                " &deg;</p></div>"
-            );
+            $("#city").append(data.data.name);
+            $("#countryWeather").append(data.data.sys.country);
+            $("#weather").append(data.data.weather[0].main);
+            $("#weatherobservation").append(data.data.weather[0].description);
+            $("#temperature").append(temp).append("&deg;C");
+            $("#humidity").append(data.data.main.humidity).append("&#37;");
           },
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -528,37 +495,6 @@ $(document).ready(() => {
         console.log(data);
 
         $("#select_country").val(data.data.countryCode).change();
-
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
-        accuracy = position.coords.accuracy;
-
-        var iconOptions = {
-          iconUrl: "images/person.png",
-          iconSize: [40, 40],
-        };
-        var customIcon = L.icon(iconOptions);
-        var markerOption = {
-          icon: customIcon,
-        };
-
-        var userMarker = L.marker([lat, lng], markerOption)
-
-          .bindTooltip("<b>You are in " + data.data.countryName + ".</b>")
-          .openTooltip();
-        circle = L.circle([lat, lng], {
-          radius: accuracy,
-          stroke: true,
-          color: "black",
-          opacity: 1,
-          weight: 1,
-          fill: true,
-          fillColor: "yellow",
-          fillOpacity: 0.2,
-        }).addTo(myMap);
-        clusterMarkers.addLayer(userMarker);
-        myMap.addLayer(clusterMarkers);
-
         var lc = L.control
           .locate({
             position: "topleft",
@@ -569,8 +505,6 @@ $(document).ready(() => {
             },
           })
           .addTo(myMap);
-
-        myMap.fitBounds(circle.getBounds());
       },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(jqXHR.textStatus);
