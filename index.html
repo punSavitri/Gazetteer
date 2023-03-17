@@ -421,7 +421,7 @@
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
-              Current Exchange Rate
+              Currency Converter
             </h5>
             <button
               type="button"
@@ -431,15 +431,28 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div class="exchangeImage">
-              <img
-                src="images/exchange.png"
-                alt="Currency Exchange "
-                width="100px"
-                height="100px"
-              />
+            <div id="exchangeRate">
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <select class="currency form-select shadow-sm">
+                      <option>Select Currency</option>
+                    </select>
+                    <span>Enter Amount</span
+                    ><input type="text" class="form-control" />
+                  </div>
+                  <div class="col">
+                    <select class="currency form-select shadow-sm">
+                      <option>Select Currency</option>
+                    </select>
+
+                    <input type="text" class="form-control" disabled name="" />
+                  </div>
+                </div>
+                <button type="button" class="btn btn-success">Convert</button>
+              </div>
+              <!--assign currency value from api -->
             </div>
-            <div id="exchangeRate"><!--assign currency value from api --></div>
 
             <div class="modal-footer">
               <button

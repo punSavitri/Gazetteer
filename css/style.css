@@ -21,6 +21,37 @@ html, body {
 }
 
 
+.row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.col {
+  width: 150px;
+}
+/* select, input {
+  width: 100px;
+  margin-bottom:15px;
+  font-size:16px;
+  padding:5px 5px;
+  font-weight: 700;
+} */ */
+
+button {
+  
+  width:150px;
+  display: block;
+  padding: 5px;
+  margin:0 auto;
+  border-radius: 10px;
+  color:#fff;
+  border:0;
+  font-size:20px;
+  cursor:pointer;
+  background-color:  grey;
+}
+
 
 /* :root {
   --primary-color:#ffff80;

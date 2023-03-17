@@ -187,28 +187,32 @@ $(document).ready(() => {
         });
 
         //return current exchange rate base currency is USD
-        // $.ajax({
-        //   url: "php/exchangeRate.php",
-        //   type: "GET",
-        //   dataType: "json",
-        //   data: {
-        //     currencies: result["data"][0]["currencyCode"],
-        //   },
-        //   success: function (data) {
-        //     console.log(data);
-        //     let code = data.data.data[Object.keys(data.data.data)[0]].code;
-        //     let value = data.data.data[Object.keys(data.data.data)[0]].value;
-        //     value = value.toFixed(2);
-        //     console.log(code);
-        //     console.log(value);
-        //     $("#exchangeRate").append(
-        //       `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
-        //     );
-        //   },
-        //   error: function (jqXHR, textStatus, errorThrown) {
-        //     console.log(jqXHR.textStatus);
-        //   },
-        // });
+        $.ajax({
+          url: "php/exchangeRate.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            currencies: result["data"][0]["currencyCode"],
+          },
+          success: function (data) {
+            console.log(data);
+            for (let i = 0; i < data.data.length; i++) {
+              let code = data.data.data[Object.keys(data.data.data)[0]].code;
+              $(".currency").append(`<option value="${code}">${code}</option>`);
+            }
+            // let code = data.data.data[Object.keys(data.data.data)[0]].code;
+            // let value = data.data.data[Object.keys(data.data.data)[0]].value;
+            // value = value.toFixed(2);
+            // console.log(code);
+            // console.log(value);
+            // $("#exchangeRate").append(
+            //   `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
+            // );
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
