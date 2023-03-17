@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="libs/plugins/L.Control.Pan.css" />
     <link rel="stylesheet" href="libs/plugins/L.Control.Sidebar.css" />
     <link rel="stylesheet" href="libs/plugins/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="libs/plugins/leaflet.extra-markers.min.css" />
     <link rel="icon" type="image/png" href="images/favicon.png" />
 
     <!-- custom css file -->
@@ -129,7 +130,6 @@
           </div>
           <div class="modal-body">
             <div id="weather_info">
-              <!--assign data from API-->
               <table class="table">
                 <tr>
                   <th>City</th>
@@ -200,11 +200,25 @@
           </div>
           <div class="modal-body">
             <div id="output">
-              <p id="title"><b>Title:</b></p>
+              <table class="table">
+                <tr>
+                  <th>Title</th>
+                  <td id="title"></td>
+                </tr>
+                <tr>
+                  <th>Summary</th>
+                  <td id="summary"></td>
+                </tr>
+                <tr>
+                  <th>More Information</th>
+                  <td id="wikiLink"></td>
+                </tr>
+              </table>
+              <!-- <p id="title"><b>Title:</b></p>
               <p id="summary"><b>Summary:</b></p>
               <p>
                 <a id="wikiLink">Click For More Information About Country</a>
-              </p>
+              </p> -->
             </div>
           </div>
 
@@ -460,6 +474,7 @@
     <script src="libs/plugins/L.Control.Pan.js"></script>
     <script src="libs/plugins/L.Control.Sidebar.js"></script>
     <script src="libs/plugins/L.Control.Locate.min.js"></script>
+    <script src="libs/plugins/leaflet.extra-markers.min.js"></script>
 
     <!-- jquery js -->
     <script src="libs/jquery/jquery-3.6.3.min.js"></script>
