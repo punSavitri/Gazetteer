@@ -435,18 +435,24 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <select class="currency form-select shadow-sm">
-                      <option>Select Currency</option>
+                    <select id="currency1" class="form-select shadow-sm">
+                      <option selected="">USD</option>
                     </select>
                     <span>Enter Amount</span
-                    ><input type="text" class="form-control" />
+                    ><input type="number" class="form-control" />
                   </div>
                   <div class="col">
-                    <select class="currency form-select shadow-sm">
+                    <select id="currency2" class="form-select shadow-sm">
                       <option>Select Currency</option>
                     </select>
 
-                    <input type="text" class="form-control" disabled name="" />
+                    <input
+                      type="number"
+                      id="output"
+                      class="form-control"
+                      disabled
+                      name=""
+                    />
                   </div>
                 </div>
                 <button type="button" class="btn btn-success">Convert</button>

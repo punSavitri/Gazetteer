@@ -193,22 +193,30 @@ $(document).ready(() => {
           dataType: "json",
           data: {
             currencies: result["data"][0]["currencyCode"],
+            base_currency: "USD",
           },
           success: function (data) {
             console.log(data);
-            for (let i = 0; i < data.data.length; i++) {
-              let code = data.data.data[Object.keys(data.data.data)[0]].code;
-              $(".currency").append(`<option value="${code}">${code}</option>`);
-            }
-            // let code = data.data.data[Object.keys(data.data.data)[0]].code;
+            let code = data.data.data[Object.keys(data.data.data)[0]].code;
             // let value = data.data.data[Object.keys(data.data.data)[0]].value;
-            // value = value.toFixed(2);
-            // console.log(code);
-            // console.log(value);
-            // $("#exchangeRate").append(
-            //   `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
-            // );
+            let value = data.data.data[Object.keys(data.data.data)[0]]["value"];
+            value = value.toFixed(2);
+            $("#currency2").append(`<option value="${code}">${code}</option>`);
+            function convert() {
+              $("button").on("click", () => {
+                $("#output").append(value);
+              });
+            }
           },
+          // let code = data.data.data[Object.keys(data.data.data)[0]].code;
+          // let value = data.data.data[Object.keys(data.data.data)[0]].value;
+          // value = value.toFixed(2);
+          // console.log(code);
+          // console.log(value);
+          // $("#exchangeRate").append(
+          //   `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
+          // );
+
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
           },
