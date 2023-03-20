@@ -13,6 +13,7 @@ var control;
 
 var bounds;
 var earthquakeMarkers;
+var earthquake;
 var toponymMarkers;
 var cityMarkers;
 var cities;
@@ -82,16 +83,34 @@ $(document).ready(() => {
     },
   }).addTo(myMap);
 
+  earthquake = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#fff",
+      color: "orange",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5,
+    },
+  }).addTo(myMap);
+
   var overlays = {
     Cities: cities,
+    Earthquake: earthquake,
   };
 
   var layerControl = L.control.layers(basemaps, overlays).addTo(myMap);
-
+  //custom icon
   cityIcon = L.ExtraMarkers.icon({
     icon: "fa-city",
     markerColor: "green",
     shape: "square",
+    prefix: "fa",
+  });
+
+  earthquakeIcon = L.ExtraMarkers.icon({
+    icon: "fa-house-crack",
+    markerColor: "orange",
+    shape: "penta",
     prefix: "fa",
   });
 
@@ -193,29 +212,24 @@ $(document).ready(() => {
           dataType: "json",
           data: {
             currencies: result["data"][0]["currencyCode"],
-            base_currency: "USD",
           },
           success: function (data) {
             console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]].code;
-            // let value = data.data.data[Object.keys(data.data.data)[0]].value;
+            let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
             let value = data.data.data[Object.keys(data.data.data)[0]]["value"];
-            value = value.toFixed(2);
+
             $("#currency2").append(`<option value="${code}">${code}</option>`);
-            function convert() {
-              $("button").on("click", () => {
-                $("#output").append(value);
-              });
-            }
+            $("#currency1").append(
+              `<option value="${value}">${value}</option>`
+            );
+
+            $("#curr_input").keyup(function () {
+              $("#output").val(
+                $("#curr_input").
+                val() * data.data.data[Object.keys(data.data.data)[0]]["value"]
+              );
+            });
           },
-          // let code = data.data.data[Object.keys(data.data.data)[0]].code;
-          // let value = data.data.data[Object.keys(data.data.data)[0]].value;
-          // value = value.toFixed(2);
-          // console.log(code);
-          // console.log(value);
-          // $("#exchangeRate").append(
-          //   `<h3>Current Currency Exchange Rate</h3> 1USD = ${value}&nbsp;${code}`
-          // );
 
           error: function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR.textStatus);
@@ -239,27 +253,22 @@ $(document).ready(() => {
             for (var i = 0; i < output.data.length; i++) {
               let lat = output.data[i].lat;
               let lng = output.data[i].lng;
-              var iconOptions = {
-                iconUrl: "images/earthquake.png",
-                iconSize: [40, 40],
-              };
-              var customIcon = L.icon(iconOptions);
-              var markerOptions = {
-                icon: customIcon,
-              };
-              var earthquakeMarker = L.marker([lat, lng], markerOptions)
+
+              L.marker([lat, lng], { icon: earthquakeIcon })
 
                 .bindPopup(
-                  "<div><p><b>Earthquake Activity</b><br><b>Date and Time:</b> " +
+                  "<div><h5>Earthquake Details</h5><table><tr><th>Date and Time</th><td>" +
                     output.data[i].datetime +
-                    "<br><b>Depth:</b> " +
+                    "</td></tr><tr><th>Depth</th><td>" +
                     output.data[i].depth +
-                    "<br><b>Magnitude:</b> " +
+                    "</td></tr><tr><th>Magnitude</th><td>" +
                     output.data[i].magnitude +
-                    "</p></div>"
+                    "</td></tr></table></div>",
+                  { direction: "top", sticky: true }
                 )
-                .openPopup();
-              clusterMarkers.addLayer(earthquakeMarker);
+                .addTo(earthquake);
+
+              // clusterMarkers.addLayer(earthquakeMarker);
             }
             myMap.addLayer(clusterMarkers);
 
@@ -288,19 +297,8 @@ $(document).ready(() => {
                   };
                   var toponymMarker = L.marker([lat, lng], markerOptions)
                     .bindPopup(
-                      "<div><b style='color:red;'>Toponyn Name:</b>" +
-                        result.data.geonames[i].toponymName +
-                        "<br><b style='color:red;'>Name:</b>" +
-                        result.data.geonames[i].name +
-                        "<br><b style='color:red;'>Country:</b>" +
-                        result.data.geonames[i].countryName +
-                        "<br><b style='color:red;'>Feature Class Name:</b>" +
-                        result.data.geonames[i].fclName +
-                        "<br><b style='color:red;'>Distance:</b>" +
-                        result.data.geonames[i].distance +
-                        "<br><b style='color:red;'>Time Zone:</b>" +
-                        result.data.geonames[i].timezone.timeZoneId +
-                        "</div>"
+                      "<b>Toponym Place</b><br>" +
+                        result.data.geonames[i].toponymName
                     )
                     .openPopup();
                   clusterMarkers.addLayer(toponymMarker);

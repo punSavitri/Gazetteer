@@ -49,12 +49,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Country Information
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close text-dark"
@@ -64,41 +64,43 @@
           </div>
           <div class="modal-body">
             <div id="country_info">
-              <!-- table -->
-
-              <div id="flag">
-                <img id="flagImg" width="100px" height="100px" />
-              </div>
-
-              <div id="country" class="text-dark align-items-center">
-                <b>Country:</b>
-              </div>
-              <div id="continent" class="text-dark align-items-center">
-                <b>Continent:</b>
-              </div>
-              <div id="capital" class="text-dark align-items-center">
-                <b>Capital City:</b>
-              </div>
-              <div id="population" class="text-dark align-items-center">
-                <b>Population:</b>
-              </div>
-              <div id="languages" class="text-dark align-items-center">
-                <b>Languages:</b>
-              </div>
+              <table class="table">
+                <tr>
+                  <th>Country Flag</th>
+                  <td><img id="flagImg" width="60px" height="60px" /></td>
+                </tr>
+                <tr>
+                  <th>Country</th>
+                  <td id="country"></td>
+                </tr>
+                <tr>
+                  <th>Continent</th>
+                  <td id="continent"></td>
+                </tr>
+                <tr>
+                  <th>Capital</th>
+                  <td id="capital"></td>
+                </tr>
+                <tr>
+                  <th>Population</th>
+                  <td id="population"></td>
+                </tr>
+                <tr>
+                  <th>Languages</th>
+                  <td id="languages"></td>
+                </tr>
+              </table>
             </div>
-
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
           </div>
         </div>
       </div>
@@ -115,12 +117,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel2"
             >
               Weather Status
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close"
@@ -185,12 +187,12 @@
       <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               About Country
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close text-dark"
@@ -211,17 +213,11 @@
                 </tr>
                 <tr>
                   <th>More Information</th>
-                  <td id="wikiLink"></td>
+                  <td><a id="wikiLink">More Information</a></td>
                 </tr>
               </table>
-              <!-- <p id="title"><b>Title:</b></p>
-              <p id="summary"><b>Summary:</b></p>
-              <p>
-                <a id="wikiLink">Click For More Information About Country</a>
-              </p> -->
             </div>
           </div>
-
           <div class="modal-footer">
             <button
               type="button"
@@ -247,12 +243,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Time Zone
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close text-dark"
@@ -326,12 +322,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Nearest Toponym Place
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close text-dark"
@@ -370,28 +366,6 @@
               </table>
             </div>
           </div>
-
-          <!-- <div id="toponymName" class="text-dark align-items-center">
-                <b>Toponym Name:</b>
-              </div>
-              <div id="name" class="text-dark align-items-center">
-                <b>Name</b>
-              </div>
-              <div id="toponymcountryName" class="text-dark align-items-center">
-                <b>Country</b>
-              </div>
-              <div id="fclName" class="text-dark align-items-center">
-                <b>Feature Class:</b>
-              </div>
-
-              <div id="distance" class="text-dark align-items-center">
-                <b>Distance:</b>
-              </div>
-              <div id="time" class="text-dark align-items-center">
-                <b>Time Zone ID:</b>
-              </div>
-            </div> -->
-
           <div class="modal-footer">
             <button
               type="button"
@@ -417,12 +391,12 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5
+            <h1
               class="modal-title d-flex justify-content-center align-items-center"
               id="modalLabel"
             >
               Currency Converter
-            </h5>
+            </h1>
             <button
               type="button"
               class="btn-close text-dark"
@@ -435,27 +409,28 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <select id="currency1" class="form-select shadow-sm">
-                      <option selected="">USD</option>
-                    </select>
-                    <span>Enter Amount</span
-                    ><input type="number" class="form-control" />
+                    <span>Currency</span>
+                    <select
+                      id="currency2"
+                      class="form-select shadow-sm"
+                    ></select>
+                    <span> Enter Amount </span
+                    ><input type="text" id="curr_input" class="form-control" />
                   </div>
-                  <div class="col">
-                    <select id="currency2" class="form-select shadow-sm">
-                      <option>Select Currency</option>
-                    </select>
 
-                    <input
-                      type="number"
-                      id="output"
-                      class="form-control"
-                      disabled
-                      name=""
-                    />
+                  <div class="col">
+                    <span>Value From USD</span>
+                    <select
+                      id="currency1"
+                      class="form-select shadow-sm"
+                    ></select>
+                    <button type="submit" class="runBtn">Run</button>
                   </div>
+
+                  <span>Result</span>
+
+                  <input type="text" id="output" class="form-control" />
                 </div>
-                <button type="button" class="btn btn-success">Convert</button>
               </div>
               <!--assign currency value from api -->
             </div>

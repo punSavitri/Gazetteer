@@ -21,7 +21,7 @@ html, body {
 }
 
 
-.row {
+/* .row {
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -29,28 +29,31 @@ html, body {
 
 .col {
   width: 150px;
-}
+} */
 /* select, input {
   width: 100px;
   margin-bottom:15px;
   font-size:16px;
   padding:5px 5px;
   font-weight: 700;
-} */ */
+} */ 
 
-button {
+.runBtn {
   
-  width:150px;
+  width: 150px;
   display: block;
-  padding: 5px;
-  margin:0 auto;
-  border-radius: 10px;
+  padding: 10px;
+  margin: 5px auto;
+  border-radius: 15px;
   color:#fff;
   border:0;
   font-size:20px;
   cursor:pointer;
-  background-color:  grey;
+  background-color:gray;
 }
+/* button .convert {
+  width:200px;
+} */
 
 
 /* :root {
