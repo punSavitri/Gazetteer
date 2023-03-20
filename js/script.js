@@ -216,19 +216,15 @@ $(document).ready(() => {
           success: function (data) {
             console.log(data);
             let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
-            let value = data.data.data[Object.keys(data.data.data)[0]]["value"];
+            let value =
+              data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
+                2
+              );
 
             $("#currency2").append(`<option value="${code}">${code}</option>`);
             $("#currency1").append(
               `<option value="${value}">${value}</option>`
             );
-
-            $("#curr_input").keyup(function () {
-              $("#output").val(
-                $("#curr_input").
-                val() * data.data.data[Object.keys(data.data.data)[0]]["value"]
-              );
-            });
           },
 
           error: function (jqXHR, textStatus, errorThrown) {
