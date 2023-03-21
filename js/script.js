@@ -236,11 +236,9 @@ $(document).ready(() => {
           },
           success: function (data) {
             console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
+            let code = data.data.data[Object.keys(data.data.data)[0]].code;
             let value =
-              data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
-                2
-              );
+              data.data.data[Object.keys(data.data.data)[0]].value.toFixed(2);
 
             $("#currency2").append(`<option value="${code}">${code}</option>`);
             $("#currency1").append(
@@ -539,7 +537,7 @@ $(document).ready(() => {
   //leaflet easy button
 
   easyButton = L.easyButton(
-    "fa-circle-info fa-1x",
+    "fa-circle-info fa-lg",
     function (btn, map) {
       $("#myModal").modal("toggle");
     },
@@ -547,7 +545,7 @@ $(document).ready(() => {
   ).addTo(myMap);
 
   easyButtonWeather = L.easyButton(
-    "fa-cloud-sun fa-1x",
+    "fa-cloud-sun fa-lg",
     function (btn, map) {
       $("#myModal2").modal("toggle");
     },
@@ -555,28 +553,28 @@ $(document).ready(() => {
   ).addTo(myMap);
 
   timeZoneButton = L.easyButton(
-    "fa-clock-o fa-1x",
+    "fa-clock-o fa-lg",
     function (btn, map) {
       $("#timezoneModal").modal("toggle");
     },
     "Time Zone"
   ).addTo(myMap);
   toponymButton = L.easyButton(
-    "fa-location-dot fa-1x ",
+    "fa-location-dot fa-lg ",
     function (btn, map) {
       $("#toponymModal").modal("toggle");
     },
     "Toponym Place Name"
   ).addTo(myMap);
   wikipediaButton = L.easyButton(
-    "fa-wikipedia-w fa-1x",
+    "fa-wikipedia-w fa-lg",
     function (btn, map) {
       $("#wikiModal").modal("show");
     },
     "wikipedia Search"
   ).addTo(myMap);
   currencyModal = L.easyButton(
-    "fa-solid fa-dollar fa-1x ",
+    "fa-solid fa-dollar fa-lg ",
     function (btn, map) {
       $("#currencyModal").modal("show");
     },
