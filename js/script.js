@@ -18,6 +18,8 @@ var toponymMarkers;
 var cityMarkers;
 var cities;
 var cityIcon;
+var poiPlace;
+var poiIcon;
 var markers;
 var userMarker;
 var stamenWatercolor;
@@ -71,18 +73,10 @@ $(document).ready(() => {
     layers: [streets],
   }).setView([54.5, -4], 6);
 
-  //cities cluster marker
+  L.control.locate().addTo(myMap);
 
-  cities = L.markerClusterGroup({
-    polygonOptions: {
-      fillColor: "#fff",
-      color: "#000",
-      weight: 2,
-      opacity: 1,
-      fillOpacity: 0.5,
-    },
-  }).addTo(myMap);
-
+  // Marker Cluster Group
+  //earthquake cluster marker
   earthquake = L.markerClusterGroup({
     polygonOptions: {
       fillColor: "#fff",
@@ -93,13 +87,43 @@ $(document).ready(() => {
     },
   }).addTo(myMap);
 
+  //cities cluster group
+  cities = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#fff",
+      color: "#000",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5,
+    },
+  }).addTo(myMap);
+
+  //point of interest(poi) cluster group
+  poiPlace = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#ffcccb",
+      color: "#000",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5,
+    },
+  }).addTo(myMap);
+
   var overlays = {
-    Cities: cities,
     Earthquake: earthquake,
+    Cities: cities,
+    POIPlace: poiPlace,
   };
 
   var layerControl = L.control.layers(basemaps, overlays).addTo(myMap);
   //custom icon
+  earthquakeIcon = L.ExtraMarkers.icon({
+    icon: "fa-house-crack",
+    markerColor: "orange",
+    shape: "penta",
+    prefix: "fa",
+  });
+
   cityIcon = L.ExtraMarkers.icon({
     icon: "fa-city",
     markerColor: "green",
@@ -107,10 +131,10 @@ $(document).ready(() => {
     prefix: "fa",
   });
 
-  earthquakeIcon = L.ExtraMarkers.icon({
-    icon: "fa-house-crack",
-    markerColor: "orange",
-    shape: "penta",
+  poiIcon = L.ExtraMarkers.icon({
+    icon: "fa-location-crosshairs",
+    markerColor: "purple",
+    shape: "circle",
     prefix: "fa",
   });
 
@@ -205,32 +229,32 @@ $(document).ready(() => {
           },
         });
 
-        //return current exchange rate base currency is USD
-        $.ajax({
-          url: "php/exchangeRate.php",
-          type: "GET",
-          dataType: "json",
-          data: {
-            currencies: result["data"][0]["currencyCode"],
-          },
-          success: function (data) {
-            console.log(data);
-            let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
-            let value =
-              data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
-                2
-              );
+        // //return current exchange rate base currency is USD
+        // $.ajax({
+        //   url: "php/exchangeRate.php",
+        //   type: "GET",
+        //   dataType: "json",
+        //   data: {
+        //     currencies: result["data"][0]["currencyCode"],
+        //   },
+        //   success: function (data) {
+        //     console.log(data);
+        //     let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
+        //     let value =
+        //       data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
+        //         2
+        //       );
 
-            $("#currency2").append(`<option value="${code}">${code}</option>`);
-            $("#currency1").append(
-              `<option value="${value}">${value}</option>`
-            );
-          },
+        //     $("#currency2").append(`<option value="${code}">${code}</option>`);
+        //     $("#currency1").append(
+        //       `<option value="${value}">${value}</option>`
+        //     );
+        //   },
 
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR.textStatus);
-          },
-        });
+        //   error: function (jqXHR, textStatus, errorThrown) {
+        //     console.log(jqXHR.textStatus);
+        //   },
+        // });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
@@ -266,7 +290,7 @@ $(document).ready(() => {
 
               // clusterMarkers.addLayer(earthquakeMarker);
             }
-            myMap.addLayer(clusterMarkers);
+            // myMap.addLayer(clusterMarkers);
 
             //it returns the  closest toponym places for the lat/lng query
             $.ajax({
@@ -366,23 +390,13 @@ $(document).ready(() => {
                   console.log(latitude);
                   console.log(longitude);
 
-                  var orangeIcon = L.icon({
-                    iconUrl: "images/orange.png",
-                    iconSize: [35, 35],
-                  });
-                  //marker one
-                  var marker1 = L.marker([latitude, longitude], {
-                    icon: orangeIcon,
-                  }).bindPopup(output.data.poi[i].name);
-                  //marker 2
-                  var marker2 = L.marker([latitude, longitude]).bindPopup(
-                    output.data.poi[i].typeClass
-                  );
-
-                  markers.addLayers([marker1, marker2]);
+                  L.marker([latitude, longitude], { icon: poiIcon })
+                    .bindTooltip(output.data.poi[i].name, {
+                      direction: "top",
+                      sticky: true,
+                    })
+                    .addTo(poiPlace);
                 }
-
-                myMap.addLayer(markers);
               },
               error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.textStatus);
@@ -528,7 +542,7 @@ $(document).ready(() => {
   //leaflet easy button
 
   easyButton = L.easyButton(
-    "fa-circle-info fa-2x",
+    "fa-circle-info fa-1x",
     function (btn, map) {
       $("#myModal").modal("toggle");
     },
@@ -536,7 +550,7 @@ $(document).ready(() => {
   ).addTo(myMap);
 
   easyButtonWeather = L.easyButton(
-    "fa-cloud-sun fa-2x",
+    "fa-cloud-sun fa-1x",
     function (btn, map) {
       $("#myModal2").modal("toggle");
     },
@@ -544,14 +558,14 @@ $(document).ready(() => {
   ).addTo(myMap);
 
   timeZoneButton = L.easyButton(
-    "fa-clock-o fa-2x",
+    "fa-clock-o fa-1x",
     function (btn, map) {
       $("#timezoneModal").modal("toggle");
     },
     "Time Zone"
   ).addTo(myMap);
   toponymButton = L.easyButton(
-    "fa-location-dot fa-2x",
+    "fa-location-dot fa-1x ",
     function (btn, map) {
       $("#toponymModal").modal("toggle");
     },
@@ -565,7 +579,7 @@ $(document).ready(() => {
     "wikipedia Search"
   ).addTo(myMap);
   currencyModal = L.easyButton(
-    "fa-solid fa-dollar fa-2x ",
+    "fa-solid fa-dollar fa-1x ",
     function (btn, map) {
       $("#currencyModal").modal("show");
     },

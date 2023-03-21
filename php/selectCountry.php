@@ -9,13 +9,21 @@ $result = file_get_contents('countryBorders.geo.json');
 
 $decode = json_decode($result, true);
 
+$country;
+
+for ($i = 0; $i < count($decode['features']); $i++) {
+  if ($decode['features'][$i]['properties']['iso_a2'] == $_REQUEST['iso']) {
+    $country = $decode['features'][$i]['properties']['name'];
+  }
+}
+
 
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
 
-$output['data'] = $decode['features'];
+$output['data'] = $country;
 
 header('Content-Type: application/json; charset=UTF-8');
 
