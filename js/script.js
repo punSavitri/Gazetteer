@@ -31,15 +31,12 @@ $(document).ready(() => {
     type: "GET",
     url: "php/selectCountry.php",
     dataType: "json",
-    data: {
-      iso: $("#select_country").val(),
-    },
+
     success: function (data) {
       console.log(data);
-
       for (var i = 0; i < data.data.length; i++) {
         $("#select_country").append(
-          `<option value="${data.data[i].properties.iso_a2}">${data.data[i].properties.name}</option>`
+          `<option value="${data.data[i].iso_a2}">${data.data[i].name}</option>`
         );
       }
     },
@@ -159,7 +156,7 @@ $(document).ready(() => {
     $("#select_country").empty().append(my_options);
     $("#select_country").val(selected);
 
-    //plotting border for selected country
+    //plotting border for selected country code
     $.ajax({
       url: "php/highlightCountryBorder.php",
       type: "GET",
@@ -230,31 +227,31 @@ $(document).ready(() => {
         });
 
         // //return current exchange rate base currency is USD
-        // $.ajax({
-        //   url: "php/exchangeRate.php",
-        //   type: "GET",
-        //   dataType: "json",
-        //   data: {
-        //     currencies: result["data"][0]["currencyCode"],
-        //   },
-        //   success: function (data) {
-        //     console.log(data);
-        //     let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
-        //     let value =
-        //       data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
-        //         2
-        //       );
+        $.ajax({
+          url: "php/exchangeRate.php",
+          type: "GET",
+          dataType: "json",
+          data: {
+            currencies: result["data"][0]["currencyCode"],
+          },
+          success: function (data) {
+            console.log(data);
+            let code = data.data.data[Object.keys(data.data.data)[0]]["code"];
+            let value =
+              data.data.data[Object.keys(data.data.data)[0]]["value"].toFixed(
+                2
+              );
 
-        //     $("#currency2").append(`<option value="${code}">${code}</option>`);
-        //     $("#currency1").append(
-        //       `<option value="${value}">${value}</option>`
-        //     );
-        //   },
+            $("#currency2").append(`<option value="${code}">${code}</option>`);
+            $("#currency1").append(
+              `<option value="${value}">${value}</option>`
+            );
+          },
 
-        //   error: function (jqXHR, textStatus, errorThrown) {
-        //     console.log(jqXHR.textStatus);
-        //   },
-        // });
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.textStatus);
+          },
+        });
 
         // returns a list of earthquakes, ordered by magnitude, based on country selection
         $.ajax({
