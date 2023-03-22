@@ -282,10 +282,7 @@ $(document).ready(() => {
                   { direction: "top", sticky: true }
                 )
                 .addTo(earthquake);
-
-              // clusterMarkers.addLayer(earthquakeMarker);
             }
-            // myMap.addLayer(clusterMarkers);
 
             //it returns the  closest toponym places for the lat/lng query
             $.ajax({
@@ -436,19 +433,13 @@ $(document).ready(() => {
           success: function (data) {
             console.log(data);
             let temp = data.data.main.temp;
-            temp = Math.floor(temp);
-
-            let min_temp = data.data.main.temp_min;
-            min_temp = Math.floor(min_temp);
-
-            let max_temp = data.data.main.temp_max;
-            max_temp = Math.floor(max_temp);
+            let temperature = Math.floor(temp);
 
             $("#city").append(data.data.name);
             $("#countryWeather").append(data.data.sys.country);
             $("#weather").append(data.data.weather[0].main);
             $("#weatherobservation").append(data.data.weather[0].description);
-            $("#temperature").append(temp).append("&deg;C");
+            $("#temperature").append(temperature).append("&deg;C");
             $("#humidity").append(data.data.main.humidity).append("&#37;");
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -567,7 +558,7 @@ $(document).ready(() => {
     "Toponym Place Name"
   ).addTo(myMap);
   wikipediaButton = L.easyButton(
-    "fa-wikipedia-w fa-lg",
+    "fa-solid fa-magnifying-glass",
     function (btn, map) {
       $("#wikiModal").modal("show");
     },
